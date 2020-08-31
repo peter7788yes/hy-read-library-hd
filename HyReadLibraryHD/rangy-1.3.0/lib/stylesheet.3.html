@@ -1,0 +1,883 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="zh-TW" xml:lang="zh-TW" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
+
+<head>
+    <title>Rangy Serializer Module Demo</title>
+    <link href="stylesheet.2.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="jquery-2.1.3.min.js"></script>	
+    <script type="text/javascript" src="file:///F:/rangy-1.3.0-beta.2/lib/rangy-core.js"></script>
+    <script type="text/javascript" src="file:///F:/rangy-1.3.0-beta.2/lib/rangy-serializer.js"></script>
+	<script type="text/javascript" src="file:///F:/rangy-1.3.0-beta.2/lib/rangy-textrange.js"></script>
+	<script type="text/javascript" src="wesley.android.selection.js"></script>
+    <script type="text/javascript" src="backcanvas.js"></script>	
+    <script type="text/javascript">
+	android.selection.leftToRight = true;
+	document.selectionchange = android.selection.OnSelectionChange;
+
+android.selection.OnSelectionChange = function() 
+{
+	console.log("out");
+	if(window.getSelection().rangeCount>0)
+	{
+		console.log("in");
+	} 
+};	
+	
+		
+// http://stackoverflow.com/questions/11191136/set-a-selection-range-from-a-to-b-in-absolute-position
+android.selection.createSelectionFromPoint = function(startX, startY, endX, endY) {
+    // alert("startX=" + startX +"," +
+	   // "startY=" + startY +"," +
+	   // "endX=" + endX +","+
+	   // "endY=" + endY);
+	
+	var doc = document;
+    var start, end, range = null;
+    if (typeof doc.caretRangeFromPoint != "undefined")
+	{	
+		if(android.selection.leftToRight == false)
+		{
+			//alert("case 2");
+			start = doc.caretRangeFromPoint(startX, startY);
+			end = doc.caretRangeFromPoint(endX, endY);
+			try{
+				range = doc.createRange();
+				range.setStart(start.startContainer, start.startOffset);
+				range.setEnd(end.startContainer, end.startOffset);
+			}
+			catch(err){
+				//alert("range error:"+err.toString());
+			}
+		}
+		else
+		{
+			start = doc.caretRangeFromPoint(startX, startY);
+			end = doc.caretRangeFromPoint(endX, endY);
+			try{
+				range = doc.createRange();
+				range.setStart(start.startContainer, start.startOffset);
+				range.setEnd(end.startContainer, end.startOffset);
+
+				//alert("after doc.caretRangeFromPoint");
+			}
+			catch(err){
+				//alert("range error:"+err.toString());
+			}		
+		}
+    }
+    if (range !== null && typeof window.getSelection != "undefined") {	
+        //alert("5");
+		var sel = window.getSelection();
+        sel.removeAllRanges();
+		//alert("addRange");
+        sel.addRange(range);
+		//alert(sel.anchorOffset);
+		//range.focus();
+		//range.select();
+		//alert(sel.anchorNode.valueOf());
+		//alert(sel.anchorNode);
+		//alert(JSON.stringify(sel.anchorNode));
+    }
+};
+		
+/**
+ *	Clears the current selection.
+ */
+android.selection.clearSelection = function(){
+	
+	try{
+		// if current selection clear it.
+	   	var sel = window.getSelection();
+	   	sel.removeAllRanges();
+	}catch(err){
+		window.TextSelection.jsError(err);
+	}	
+};
+	
+		var viewportwidth;
+		var viewportheight;
+		
+		var documentwidth;
+		var documentheight;
+		
+		var totalpages;
+		var currentpage;
+		var justifieddocumentwidth;
+		
+        function gEBI(id) {
+            return document.getElementById(id);
+        }
+
+        function serializeSelection() {
+            var input = gEBI("serializedSelection");
+            input.value = rangy.serializeSelection();
+            input.focus();
+            input.select();
+        }
+
+        function deserializeSelection() {
+			//rangy.deserializeSelection(gEBI("selectionToDeserialize").value);
+			
+            var output = gEBI("selectionToDeserialize");
+			var sel = null;
+			var resonable_serializedID = null;
+			try
+			{			
+				var canDe = rangy.canDeserializeSelection(output.value);//, document.body, true);
+				
+				
+				if(canDe)
+				{
+					rangy.deserializeSelection(output.value);
+					var wsel = window.getSelection();
+					var wrange = wsel.getRangeAt(0);
+					var wboundingRect = wrange.getBoundingClientRect();
+					console.log("wboundingRect=" + wboundingRect.left + " " + wboundingRect.top + " " + wboundingRect.right + " " + wboundingRect.bottom);					
+					
+					sel=rangy.getSelection();
+					var total_length = sel.toString().length;
+					console.log('total_length=' + total_length);
+					//var serialized = JSON.stringify(sel);
+					//console.log("sel(serialized)=" + serialized);
+					var anchornode=sel.anchorNode;
+					//console.log("anchornode="+anchornode);
+					
+					var anchoroffset=sel.anchorOffset;
+					//console.log("anchoroffset="+anchoroffset);
+					var focusnode=sel.focusNode;
+					//console.log("focusnode="+focusnode);
+					var focusoffset=sel.focusOffset;
+					//window.clearSelection();
+
+					var range = rangy.createRange();
+					range.setStartAndEnd(anchornode, anchoroffset, anchornode, anchoroffset);
+					/*
+					range.setStartAndEnd(anchornode,anchoroffset, anchornode, anchoroffset);
+
+					var new_serial = rangy.serializeRange(range);
+					alert('new_serial=' + new_serial);
+					rangy.deserializeSelection(new_serial);
+					
+					var rectsOOO = window.getSelection().getRangeAt(0).getClientRects();
+					alert('rectsOOO.length=' + rectsOOO.length);
+					var k=0;
+					for (k = 0;k < rectsOOO.length; k++)
+					{
+						
+							alert("rectsOOO[" + k + "]=" + rectsOOO[k].left + ",\n" +rectsOOO[k].top + ",\n" + rectsOOO[k].right + ",\n" + rectsOOO[k].bottom);
+							
+							
+					}	
+					*/
+					//range.setStartAndEnd(anchornode,anchoroffset, focusnode, focusoffset);
+					var old_serial = rangy.serializeRange(range);
+					//console.log('old_serial =' + old_serial);
+					//range.setStartAndEnd(anchornode, anchoroffset, anchornode, anchoroffset);
+					//range.moveStart("character",1);
+					var new_serial = null;	
+					var i = 0;
+					android.selection.clearSelection();
+					while(i != total_length)
+					{
+						//android.selection.clearSelection();
+						//range.moveStart("character", 1);
+						range.moveEnd("character", 1);
+						range.collapse(false);
+						new_serial = rangy.serializeRange(range);
+						//console.log('new_serial =' + new_serial);
+						i++;
+						var flag_range = rangy.canDeserializeRange(new_serial);
+						rangy.deserializeSelection(new_serial);
+						var rectsOOO = window.getSelection().getRangeAt(0).getClientRects();
+							
+						
+						//console.log('rectsOOO.length=' + rectsOOO.length);
+
+						var k=0;
+						for (k = 0;k < rectsOOO.length; k++)
+						{
+						
+							//console.log("rectsOOO[" + k + "]=" + rectsOOO[k].left + ",\n" +rectsOOO[k].top + ",\n" + rectsOOO[k].right + ",\n" + rectsOOO[k].bottom);
+							alert("(" + rectsOOO[k].left + "," +rectsOOO[k].top + ")(" + rectsOOO[k].right + "," + rectsOOO[k].bottom + ")\n");
+	
+						}
+						
+					}
+					console.log("i=" + i);
+					
+					
+					
+					
+					
+					/*
+					android.selection.clearSelection();
+					range.setStartAndEnd(anchornode,anchoroffset, anchornode, anchoroffset);
+					var temp_serialid = rangy.serializeRange(range);
+						//alert("temp_serial="+temp_serial);
+						
+					rangy.deserializeSelection(temp_serialid);
+					alert("temp_serialid");
+					range.moveEnd("character",1);
+					var j = 0;
+					var flag_found_border = false;
+					while(j < i && !flag_found_border)
+					{
+						j++;
+						var temp_serial = rangy.serializeRange(range);
+						alert("temp_serial="+temp_serial);
+						
+						rangy.deserializeSelection(temp_serial);
+									
+						sel=window.getSelection();
+						var temp_range = sel.getRangeAt(0);
+						temp_range.collapse(true);
+						
+						var rectsOOO = temp_range.getClientRects();
+						alert('rectsOOO.length=' + rectsOOO.length);
+						
+						var k=0;
+						for (k = 0;k < rectsOOO.length; k++)
+						{
+							if(rectsOOO[k].right>android.selection.pageWidth)
+							{
+								alert("rectsOOO[" + k + "]=" + rectsOOO[k].left + ",\n" +rectsOOO[k].top + ",\n" + rectsOOO[k].right + ",\n" + rectsOOO[k].bottom);
+								flag_found_border = true;
+								break;
+							}
+						}					
+						range.moveStart("character",1);
+						range.moveEnd("character",1);
+			
+					}	
+					//alert("break");
+					if(flag_found_border)
+					{
+					  j--;
+					  alert("border =" + j);
+					  range.setStartAndEnd(anchornode,anchoroffset, anchornode, anchoroffset);
+					  range.moveEnd(j);
+					  resonable_serializedID = rangy.serializeRange(range);
+					  alert("resonable_serializedID="+resonable_serializedID);
+					  
+					  android.selection.clearSelection();
+					  rangy.deserializeSelection(resonable_serializedID);
+					  range.select();
+					}
+					else
+					{
+						//alert("not found =");
+						resonable_serializedID = old_serial; 
+						alert("resonable_serializedID="+resonable_serializedID);
+
+						android.selection.clearSelection();
+						rangy.deserializeSelection(resonable_serializedID);
+					  					
+					}
+					*/
+				}
+
+			}
+			catch(err)
+			{
+				alert(err.toString());
+				//alert(output.value + " Failed");
+			}
+						
+			
+        }
+		var isMouseDown = false;
+        function restoreSelection() {
+        //Eventr.simulate(document, 'mouseup' ,[pointerX=400,pointerY=400]);    //rangy.restoreSelectionFromCookie();
+			isMouseDown = true;
+			
+        }
+
+        function saveSelection() {
+		
+		
+            //rangy.saveSelectionCookie();
+        }
+		
+		function slideUp() {
+			//alert("slideUp()");
+			var currentTopPos = $(window).scrollTop();
+			topPos=currentTopPos+viewportheight;
+			if(currentpage+1 < totalpages)
+			{
+				$(window).scrollTop(topPos);
+				currentpage++;
+			}
+			else if(currentpage+1 == totalpages)
+			{
+				$(window).scrollTop(topPos);
+				currentpage++;
+			}	
+		}
+		
+		function slideBottom() {
+			//alert("slideBottom()");
+			var currentTopPos = $(window).scrollTop();
+			topPos=currentTopPos-viewportheight;
+			if(currentpage-1 > 1)
+			{				
+				$(window).scrollTop(topPos);
+				currentpage--;
+			}
+			else if(currentpage-1 == 1)
+			{
+				$(window).scrollTop(topPos);
+				currentpage--;
+			}			
+		}
+		
+        function slideLeft() {
+			//alert('Left');
+			//$(window).unbind('scroll');
+			//alert("scrollLeft()=" + leftPos);
+			var currentLeftPos = $(window).scrollLeft();
+			//alert("currentLeftPos=" + currentLeftPos);
+			leftPos=currentLeftPos-viewportwidth;//+100;
+			//alert("leftPos=" + leftPos);
+			//while(currentLeftPos != leftPos){
+				//alert("leftPos=" + leftPos);
+			if(currentpage-1 > 1)
+			{
+				//alert("slide once");
+				$(window).scrollLeft(leftPos);
+				currentpage--;
+			}
+			else if(currentpage-1 == 1)
+			{
+				//alert("slide once");
+				$(window).scrollLeft(leftPos);
+				currentpage--;
+			}
+				//currentLeftPos = $(window).scrollLeft();
+			//}
+			//$(window).bind('scroll');
+			
+        }		
+		
+        function slideRight() {
+			//alert('Right');
+			//$(window).unbind('scroll');
+			//alert("scrollLeft()=" + leftPos);
+			var currentLeftPos = $(window).scrollLeft();
+			//alert("currentLeftPos=" + currentLeftPos);
+			var leftPos=currentLeftPos+viewportwidth;//-100;
+			//alert("leftPos=" + leftPos);
+			//alert("leftPos=" + leftPos);
+			//while(currentLeftPos != leftPos){
+				//alert("leftPos=" + leftPos);
+			if(currentpage+1 < totalpages)
+			{
+				//alert("slide once");
+				$(window).scrollLeft(leftPos);
+				currentpage++;
+			}
+			else if(currentpage+1 == totalpages)
+			{
+				//alert("slide once");
+				$(window).scrollLeft(leftPos);
+				currentpage++;
+			}
+			//currentLeftPos = $(window).scrollLeft();
+			//}
+			//$(window).bind('scroll');
+			
+        }
+		
+		function listAllProperties(o){     
+			var objectToInspect;     
+			var result = [];
+			
+			for(objectToInspect = o; objectToInspect !== null; objectToInspect = Object.getPrototypeOf(objectToInspect)){  
+				result = result.concat(Object.getOwnPropertyNames(objectToInspect));  
+			}
+			
+			return result; 
+		}
+
+		function setCookie(cname, cvalue, exdays) {
+			var d = new Date();
+			d.setTime(d.getTime() + (exdays*24*60*60*1000));
+			var expires = "expires="+d.toUTCString();
+			document.cookie = cname + "=" + cvalue + "; " + expires;
+		}
+		
+		function simulate(element, eventName)
+		{
+			var options = extend(defaultOptions, arguments[2] || {});
+			var oEvent, eventType = null;
+
+			for (var name in eventMatchers)
+			{
+				if (eventMatchers[name].test(eventName)) { eventType = name; break; }
+			}
+
+			if (!eventType)
+				throw new SyntaxError('Only HTMLEvents and MouseEvents interfaces are supported');
+
+			if (document.createEvent)
+			{
+				oEvent = document.createEvent(eventType);
+				if (eventType == 'HTMLEvents')
+				{
+					oEvent.initEvent(eventName, options.bubbles, options.cancelable);
+				}
+				else
+				{
+					oEvent.initMouseEvent(eventName, options.bubbles, options.cancelable, document.defaultView,
+					options.button, options.pointerX, options.pointerY, options.pointerX, options.pointerY,
+					options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, options.button, element);
+				}
+				element.dispatchEvent(oEvent);
+			}
+			else
+			{
+				options.clientX = options.pointerX;
+				options.clientY = options.pointerY;
+				var evt = document.createEventObject();
+				oEvent = extend(evt, options);
+				element.fireEvent('on' + eventName, oEvent);
+			}
+			return element;
+		}
+
+		function extend(destination, source) {
+			for (var property in source)
+			  destination[property] = source[property];
+			return destination;
+		}
+
+		var eventMatchers = {
+			'HTMLEvents': /^(?:load|unload|abort|error|select|change|submit|reset|focus|blur|resize|scroll)$/,
+			'MouseEvents': /^(?:click|dblclick|mouse(?:down|up|over|move|out))$/
+		}
+		
+		var defaultOptions = {
+			pointerX: 0,
+			pointerY: 0,
+			button: 0,
+			ctrlKey: false,
+			altKey: false,
+			shiftKey: false,
+			metaKey: false,
+			bubbles: true,
+			cancelable: true
+		}	
+function toJSON(node) {
+  node = node || this;
+  var obj = {
+    nodeType: node.nodeType
+  };
+  if (node.tagName) {
+    obj.tagName = node.tagName.toLowerCase();
+  } else
+  if (node.nodeName) {
+    obj.nodeName = node.nodeName;
+  }
+  if (node.nodeValue) {
+    obj.nodeValue = node.nodeValue;
+  }
+  var attrs = node.attributes;
+  if (attrs) {
+    var length = attrs.length;
+    var arr = obj.attributes = new Array(length);
+    for (var i = 0; i < length; i++) {
+      attr = attrs[i];
+      arr[i] = [attr.nodeName, attr.nodeValue];
+    }
+  }
+  var childNodes = node.childNodes;
+  if (childNodes) {
+    length = childNodes.length;
+    arr = obj.childNodes = new Array(length);
+    for (i = 0; i < length; i++) {
+      arr[i] = toJSON(childNodes[i]);
+    }
+  }
+  return obj;
+}
+ 
+function toDOM(obj) {
+  if (typeof obj == 'string') {
+    obj = JSON.parse(obj);
+  }
+  var node, nodeType = obj.nodeType;
+  switch (nodeType) {
+    case 1: //ELEMENT_NODE
+      node = document.createElement(obj.tagName);
+      var attributes = obj.attributes || [];
+      for (var i = 0, len = attributes.length; i < len; i++) {
+        var attr = attributes[i];
+        node.setAttribute(attr[0], attr[1]);
+      }
+      break;
+    case 3: //TEXT_NODE
+      node = document.createTextNode(obj.nodeValue);
+      break;
+    case 8: //COMMENT_NODE
+      node = document.createComment(obj.nodeValue);
+      break;
+    case 9: //DOCUMENT_NODE
+      node = document.implementation.createDocument();
+      break;
+    case 10: //DOCUMENT_TYPE_NODE
+      node = document.implementation.createDocumentType(obj.nodeName);
+      break;
+    case 11: //DOCUMENT_FRAGMENT_NODE
+      node = document.createDocumentFragment();
+      break;
+    default:
+      return node;
+  }
+  if (nodeType == 1 || nodeType == 11) {
+    var childNodes = obj.childNodes || [];
+    for (i = 0, len = childNodes.length; i < len; i++) {
+      node.appendChild(toDOM(childNodes[i]));
+    }
+  }
+  return node;
+}	
+//http://home.arcor.de/martin.honnen/javascript/storingSelection1.html
+function makeXPath (node, currentPath) {
+  /* this should suffice in HTML documents for selectable nodes, XML with namespaces needs more code */
+  currentPath = currentPath || '';
+  switch (node.nodeType) {
+    case 3:
+    case 4:
+      return makeXPath(node.parentNode, 'text()[' + (document.evaluate('preceding-sibling::text()', node, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotLength + 1) + ']');
+    case 1:
+      return makeXPath(node.parentNode, node.nodeName + '[' + (document.evaluate('preceding-sibling::' + node.nodeName, node, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotLength + 1) + ']' + (currentPath ? '/' + currentPath : ''));
+    case 9:
+      return '/' + currentPath;
+    default:
+      return '';
+  }
+}	
+
+        function hardRefresh() {
+			//alert("hardRefresh the page=" + document.URL);
+			//window.location.assign(document.URL);
+			//alert("emulator");
+			//simulate($(document), "dblclick", { pointerX: 643, pointerY: 121 });
+			//simulate(document, "dblclick", { pointerX: 833, pointerY: 125 });
+			
+			//android.selection.createSelectionFromPoint(620,50,920,100);
+			var sel = window.getSelection();
+			var range = sel.getRangeAt(0);
+			
+			//var startOffset = range.startOffset;
+			//alert(startOffset);
+			//var saveNode = range.startContainer;
+			//alert(saveNode.toString());
+			//var obj = toJSON(saveNode);
+			//alert(JSON.stringify(obj));
+			//var t_obj = JSON.stringify(obj);
+			//alert(JSON.parse(t_obj));
+			//var t_dom = JSON.parse(t_obj);
+			
+			//var dom = toDOM(t_dom);
+			//alert(JSON.stringify(dom));
+			
+			window.getSelection().empty();
+			//alert("cleared!");
+			//range.setStart(dom, startOffset);
+			//sel.addRange(range);
+			/*
+var s = new XMLSerializer();
+ var d = saveNode;
+ var str = s.serializeToString(d);
+ //alert(str);
+ var parser = new DOMParser();
+var doc = parser.parseFromString(str,"text/html");
+//alert(doc.toString());
+*/
+
+//range.setStart(range.endContainer,range.anchorOffset,range.startContainer, range.startOffset);
+//sel.addRange(range);
+//alert(makeXPath(range.endContainer) + '|' + range.endOffset + '|' + makeXPath(range.startContainer) + '|' + range.startOffset);
+
+//alert(makeXPath(range.startContainer) + '|' + range.startOffset + '|' + makeXPath(range.endContainer) + '|' + range.endOffset);
+/*
+var d = new Date();
+var dt = d.getTime();
+
+	for (var i = 1; i<2;i++)
+	{
+//http://home.arcor.de/martin.honnen/javascript/storingSelection1.html
+
+
+	  //var selectionDetails = makeXPath(range.startContainer) + '|' + range.startOffset + '|' + makeXPath(range.endContainer) + '|' + range.endOffset;
+	  var selectionDetails = makeXPath(range.startContainer) + '|' + range.startOffset + '|' + makeXPath(range.endContainer) + '|' + range.endOffset;
+	  
+	  if (selectionDetails != null) {
+		selectionDetails = selectionDetails.split(/\|/g);
+		if (typeof window.getSelection != 'undefined') {
+		  //var selection = window.getSelection();
+		  //selection.removeAllRanges();
+		  //var range = document.createRange();
+		  range.setStart(document.evaluate(selectionDetails[0], document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(selectionDetails[1]));
+		  range.setEnd(document.evaluate(selectionDetails[2], document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue, Number(selectionDetails[3]));
+		  sel.addRange(range);
+		}
+	  }
+	}
+
+var d2 = new Date();
+var dt2 = d2.getTime();
+alert(dt2-dt);
+*/
+	//var saveNode_dom = JSON.parse(dom);
+			//alert(saveNode_dom.toString());
+			//var startOffset = range.startOffset;  // where the range starts
+			//var endOffset = range.endOffset;      // where the range ends
+
+			//var nodeData = saveNode.data;                       // the actual selected text
+			//console.log(nodeData);
+			//var nodeHTML = saveNode.parentElement.innerHTML;    // parent element innerHTML
+			//console.log(nodeHTML);
+			//var nodeTagName = saveNode.parentElement.tagName;   // parent element tag name
+			//console.log(nodeTagName);
+			
+			//alert(stringify(saveNode, null, 5));
+			//Cookies.set('myAge', '43');
+			//setCookie('myAge', '43', 30);
+			
+
+		}
+		
+		function getCookie(cname) {
+			var name = cname + "=";
+			var ca = document.cookie.split(';');
+			for(var i=0; i<ca.length; i++) {
+				var c = ca[i];
+				while (c.charAt(0)==' ') c = c.substring(1);
+				if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+			}
+			return "";
+		}		
+		
+        function softRefresh() {
+			//alert("softRefresh the page=" + document.URL);
+			//window.location.reload();
+			//var x = Cookies.get('myAge');
+			//console.log(x);
+			//alert(x);
+			
+			//$(window).mousemove(function( event ) {
+			//	var msg = "Handler for .mousemove() called at ";
+			//	msg += event.pageX + ", " + event.pageY;
+			//	alert(msg);
+			//}); 
+			$(document).delegate('', 'selectstart', false);
+
+		}		
+		
+		$(document).ready(function()
+		{		
+			//alert('ready');
+			
+			rangy.init();
+			
+			// the more standards compliant browsers (mozilla/netscape/opera/IE7) use window.innerWidth and window.innerHeight
+			if (typeof window.innerWidth != 'undefined')
+			{
+				viewportwidth = window.innerWidth;
+				viewportheight = window.innerHeight;
+			}			
+			//alert("viewportwidth=" + viewportwidth);
+			//alert("viewportheight=" + viewportheight);
+			
+			if (typeof $(document).width != 'undefined')
+			{
+				documentwidth = $(document).width();
+				documentheight = $(document).height();
+			}					
+			//alert("documentwidth=" + documentwidth);
+			//alert("documentheight=" + documentheight);	
+			
+			android.selection.pageWidth = viewportwidth; 
+			android.selection.pageHeight = viewportheight;
+			
+			//viewportwidth /= 1.25; //DPI-X
+			//viewportheight /= 1.25; //DPI-Y
+			totalpages = Math.ceil(documentwidth / viewportwidth);
+			//totalpages = Math.ceil(documentheight / viewportheight);
+			//alert("total page=" + totalpages);
+			
+			justifieddocumentwidth = viewportwidth * totalpages;
+			//justifieddocumentheight = viewportheight * totalpages;
+			//alert("justifieddocumentheight=" + justifieddocumentheight);
+					
+			currentpage = 1;
+			
+			//body.onselectionchange="function(e){OnSelectionChange(e);};"
+
+
+			
+		});
+		
+        window.onload = function() {
+            //alert('onload');
+
+			// Reset the form
+			$(":reset");
+		
+			console.clear();
+			
+            // Enable buttons
+            var serializerModule = rangy.modules.Serializer;
+            if (rangy.supported && serializerModule && serializerModule.supported) {
+                gEBI("serializedSelection").disabled = false;
+                var serializeButton = gEBI("serializeButton");
+                serializeButton.disabled = false;
+                serializeButton.ontouchstart = serializeButton.onclick = serializeSelection;
+
+                gEBI("selectionToDeserialize").disabled = false;
+                var deserializeButton = gEBI("deserializeButton");
+                deserializeButton.disabled = false;
+                deserializeButton.ontouchstart = deserializeButton.onclick = deserializeSelection;
+
+                // Display the control range element in IE
+                if (rangy.features.implementsControlRange) {
+                    gEBI("controlRange").style.display = "block";
+                }
+
+                // Restore the selection from a previous visit to this page
+                //restoreSelection();
+				
+                //gEBI("slideLeft").disabled = false;
+				//slideBottom
+                var slideMinusButton = gEBI("slideMinusButton");
+                slideMinusButton.disabled = false;
+                slideMinusButton.ontouchstart = //slideLeftButton.onclick = slideLeft;	
+				slideMinusButton.onclick = slideLeft;	
+				
+                //gEBI("slideRight").disabled = false;
+				//slideUp
+                var slidePlusButton = gEBI("slidePlusButton");
+                slidePlusButton.disabled = false;
+                slidePlusButton.ontouchstart = //slideRightButton.onclick = slideRight;
+				slidePlusButton.onclick = slideRight;
+
+                var hardRefreshButton = gEBI("hardRefreshButton");
+                hardRefreshButton.disabled = false;
+                hardRefreshButton.ontouchstart = hardRefreshButton.onclick = hardRefresh;
+				
+                var softRefreshButton = gEBI("softRefreshButton");
+                softRefreshButton.disabled = false;
+                softRefreshButton.ontouchstart = softRefreshButton.onclick = softRefresh;				
+            }
+			
+			//makeABackCanvas(justifieddocumentwidth, documentheight, false);
+			//single-page mode
+			//Horizontal-writing
+			//alert("justifieddocumentwidth="+justifieddocumentwidth);			
+			
+			makeABackCanvasWithColumnnumber(justifieddocumentwidth, viewportheight, true, 1)
+			//Vertical-writing
+			//makeABackCanvasWithColumnnumber(viewportwidth, justifieddocumentheight, false, 1)		
+			$(window).scrollLeft(0);
+			//$(window).scrollTop(0);
+			
+
+			
+        };
+
+        window.onbeforeunload = saveSelection;
+        
+		function OnSelectionChange(event) {
+			console.log(event.type);
+			console.log(event.srcElement);
+			console.log(event.cancelable);
+			console.log(event.bubbles);
+			console.log(event.cancelBubble);
+			console.log(event.target);
+			
+		};	
+    </script>
+</head>
+<body >
+<!--- div id="two-up"></div -->
+    <div id="buttons">
+        <p class="buttonpara">Serialize selection</p>
+        <input type="text" disabled id="serializedSelection" size="40">
+        <input type="button" disabled id="serializeButton" value="Serialize selection" unselectable="on" class="unselectable">
+
+        <p class="buttonpara">Deserialize selection</p>
+        <input type="text" disabled id="selectionToDeserialize" size="40">
+        <input type="button" disabled id="deserializeButton" value="Restore selection" unselectable="on" class="unselectable">
+		<br/>
+        <!--p class="buttonpara">Slide to the Left</p-->
+        <!--input type="text" disabled id="slideLeft" size="40"-->
+        <input type="button" disabled id="slideMinusButton" value="Minus" unselectable="on" class="unselectable">	
+
+        <!--p class="buttonpara">Slide to the Right</p-->
+        <!--input type="text" disabled id="slideRight" size="40"-->
+        <input type="button" disabled id="slidePlusButton" value="Plus" unselectable="on" class="unselectable">		
+
+        <!--p class="buttonpara">(Hard) Refresh</p-->
+        <!--input type="text" disabled id="hardRefresh" size="40"-->
+        <input type="button" disabled id="hardRefreshButton" value="(Hard) Refresh" unselectable="on" class="unselectable">		
+		
+        <!--p class="buttonpara">(Soft) Refresh</p-->
+        <!--input type="text" disabled id="softRefresh" size="40"-->
+        <input type="button" disabled id="softRefreshButton" value="(Soft) Refresh" unselectable="on" class="unselectable">		
+    </div>
+		
+
+<h1>魯迅自序</h1>
+
+<p>我在年青時候也曾經做過許多夢，後來大半忘卻了，但自己也並不以為可惜。所謂回憶者，雖說可以使人歡欣，有時也不免使人寂寞，使精神的絲縷還牽著已逝的寂寞時光，又有什麼意味呢，而我偏苦於不能全忘卻，這不能全忘的一部分，到現在便成了《吶喊》的來由。
+</p>
+<p>
+　　Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius.
+</p>
+<p>　　我在年青時候也曾經做過許多夢，後來大半忘卻了，但自己也並不以為可惜。所謂回憶者，雖說可以使人歡欣，有時也不免使人寂寞，使精神的絲縷還牽著已逝的寂寞時光，又有什麼意味呢，而我偏苦於不能全忘卻，這不能全忘的一部分，到現在便成了《吶喊》的來由。
+</p>
+<p>
+　　我有四年多，曾經常常——幾乎是每天，出入於質鋪和藥店裏，年紀可是忘卻了，總之是藥店的櫃檯正和我一樣高，質鋪的是比我高一倍。我從一倍高的櫃檯外送上衣服或首飾去，在侮蔑裏接了錢，再到一樣高的櫃檯上給我久病的父親去買藥。回家之後，又須忙別的事了，因為開方的醫生是最有名的，以此所用的藥引也奇特：冬天的蘆根，經霜三年的甘蔗，蟋蟀要原對的，結子的平地木⋯⋯多不是容易辦到的東西。然而我的父親終於日重一日的亡故了。
+</p>
+<p>　　我在年青時候也曾經做過許多夢，後來大半忘卻了，但自己也並不以為可惜。所謂回憶者，雖說可以使人歡欣，有時也不免使人寂寞，使精神的絲縷還牽著已逝的寂寞時光，又有什麼意味呢，而我偏苦於不能全忘卻，這不能全忘的一部分，到現在便成了《吶喊》的來由。
+</p>
+<p>
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius.
+</p>
+<p>　　我在年青時候也曾經做過許多夢，後來大半忘卻了，但自己也並不以為可惜。所謂回憶者，雖說可以使人歡欣，有時也不免使人寂寞，使精神的絲縷還牽著已逝的寂寞時光，又有什麼意味呢，而我偏苦於不能全忘卻，這不能全忘的一部分，到現在便成了《吶喊》的來由。
+</p>
+<p>
+　　我有四年多，曾經常常——幾乎是每天，出入於質鋪和藥店裏，年紀可是忘卻了，總之是藥店的櫃檯正和我一樣高，質鋪的是比我高一倍。我從一倍高的櫃檯外送上衣服或首飾去，在侮蔑裏接了錢，再到一樣高的櫃檯上給我久病的父親去買藥。回家之後，又須忙別的事了，因為開方的醫生是最有名的，以此所用的藥引也奇特：冬天的蘆根，經霜三年的甘蔗，蟋蟀要原對的，結子的平地木⋯⋯多不是容易辦到的東西。然而我的父親終於日重一日的亡故了。
+</p><p>　　我在年青時候也曾經做過許多夢，後來大半忘卻了，但自己也並不以為可惜。所謂回憶者，雖說可以使人歡欣，有時也不免使人寂寞，使精神的絲縷還牽著已逝的寂寞時光，又有什麼意味呢，而我偏苦於不能全忘卻，這不能全忘的一部分，到現在便成了《吶喊》的來由。
+</p>
+<p>
+　　我有四年多，曾經常常——幾乎是每天，出入於質鋪和藥店裏，年紀可是忘卻了，總之是藥店的櫃檯正和我一樣高，質鋪的是比我高一倍。我從一倍高的櫃檯外送上衣服或首飾去，在侮蔑裏接了錢，再到一樣高的櫃檯上給我久病的父親去買藥。回家之後，又須忙別的事了，因為開方的醫生是最有名的，以此所用的藥引也奇特：冬天的蘆根，經霜三年的甘蔗，蟋蟀要原對的，結子的平地木⋯⋯多不是容易辦到的東西。然而我的父親終於日重一日的亡故了。
+</p>
+<p>　　我在年青時候也曾經做過許多夢，後來大半忘卻了，但自己也並不以為可惜。所謂回憶者，雖說可以使人歡欣，有時也不免使人寂寞，使精神的絲縷還牽著已逝的寂寞時光，又有什麼意味呢，而我偏苦於不能全忘卻，這不能全忘的一部分，到現在便成了《吶喊》的來由。
+</p>
+<p>
+　　我有四年多，曾經常常——幾乎是每天，出入於質鋪和藥店裏，年紀可是忘卻了，總之是藥店的櫃檯正和我一樣高，質鋪的是比我高一倍。我從一倍高的櫃檯外送上衣服或首飾去，在侮蔑裏接了錢，再到一樣高的櫃檯上給我久病的父親去買藥。回家之後，又須忙別的事了，因為開方的醫生是最有名的，以此所用的藥引也奇特：冬天的蘆根，經霜三年的甘蔗，蟋蟀要原對的，結子的平地木⋯⋯多不是容易辦到的東西。然而我的父親終於日重一日的亡故了。
+</p>
+<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius.
+</p>
+<p>
+　　我有四年多，曾經常常——幾乎是每天，出入於質鋪和藥店裏，年紀可是忘卻了，總之是藥店的櫃檯正和我一樣高，質鋪的是比我高一倍。我從一倍高的櫃檯外送上衣服或首飾去，在侮蔑裏接了錢，再到一樣高的櫃檯上給我久病的父親去買藥。回家之後，又須忙別的事了，因為開方的醫生是最有名的，以此所用的藥引也奇特：冬天的蘆根，經霜三年的甘蔗，蟋蟀要原對的，結子的平地木⋯⋯多不是容易辦到的東西。然而我的父親終於日重一日的亡故了。
+</p>
+<p>　　我在年青時候也曾經做過許多夢，後來大半忘卻了，但自己也並不以為可惜。所謂回憶者，雖說可以使人歡欣，有時也不免使人寂寞，使精神的絲縷還牽著已逝的寂寞時光，又有什麼意味呢，而我偏苦於不能全忘卻，這不能全忘的一部分，到現在便成了《吶喊》的來由。
+</p>
+<p>
+　　我有四年多，曾經常常——幾乎是每天，出入於質鋪和藥店裏，年紀可是忘卻了，總之是藥店的櫃檯正和我一樣高，質鋪的是比我高一倍。我從一倍高的櫃檯外送上衣服或首飾去，在侮蔑裏接了錢，再到一樣高的櫃檯上給我久病的父親去買藥。回家之後，又須忙別的事了，因為開方的醫生是最有名的，以此所用的藥引也奇特：冬天的蘆根，經霜三年的甘蔗，蟋蟀要原對的，結子的平地木⋯⋯多不是容易辦到的東西。然而我的父親終於日重一日的亡故了。
+</p>
+<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius.
+</p>
+<p>
+　　我有四年多，曾經常常——幾乎是每天，出入於質鋪和藥店裏，年紀可是忘卻了，總之是藥店的櫃檯正和我一樣高，質鋪的是比我高一倍。我從一倍高的櫃檯外送上衣服或首飾去，在侮蔑裏接了錢，再到一樣高的櫃檯上給我久病的父親去買藥。回家之後，又須忙別的事了，因為開方的醫生是最有名的，以此所用的藥引也奇特：冬天的蘆根，經霜三年的甘蔗，蟋蟀要原對的，結子的平地木⋯⋯多不是容易辦到的東西。然而我的父親終於日重一日的亡故了。
+</p>
+<p>　　我在年青時候也曾經做過許多夢，後來大半忘卻了，但自己也並不以為可惜。所謂回憶者，雖說可以使人歡欣，有時也不免使人寂寞，使精神的絲縷還牽著已逝的寂寞時光，又有什麼意味呢，而我偏苦於不能全忘卻，這不能全忘的一部分，到現在便成了《吶喊》的來由。
+</p>
+<p>
+　　我有四年多，曾經常常——幾乎是每天，出入於質鋪和藥店裏，年紀可是忘卻了，總之是藥店的櫃檯正和我一樣高，質鋪的是比我高一倍。我從一倍高的櫃檯外送上衣服或首飾去，在侮蔑裏接了錢，再到一樣高的櫃檯上給我久病的父親去買藥。回家之後，又須忙別的事了，因為開方的醫生是最有名的，以此所用的藥引也奇特：冬天的蘆根，經霜三年的甘蔗，蟋蟀要原對的，結子的平地木⋯⋯多不是容易辦到的東西。然而我的父親終於日重一日的亡故了。
+</p>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><title>Flowplayer - flashls</title>
+
+<script type="text/javascript" src="flowplayer-3.2.12.min.js"></script>
+<script type="text/javascript" src="jquery-1.11.1.min.js"></script>
+<script>
+var api = "";
+
+function getCurrentPlayTime(){
+	window.external.getCurrentPlayTime(api.getTime()); 
+}
+
+function seekToSpecificTime(seekTime){
+	//api.pause();
+	api.seek(seekTime);
+	//api.play();
+}
+
+</script>
+
+</head>
+
+<body id="plugins_httpstreamingm3u8">
+
+<script type="text/javascript" src="flowplayer.ipad-3.2.12.min.js"></script>
+
+<div style="margin: 0px auto; width: 90%; height: 45%px;">
+<!-- player container--><a style="display: block; width: 100%; height: 45%;" id="player">
+</a>
+<!-- Flowplayer installation and configuration -->
+<script type="text/javascript">
+
+
+api = flowplayer("player", "flowplayer.swf", {
+// configure the required plugins
+wmode: 'direct',
+plugins: {
+		controls: {
+			height: 50
+		},
+		httpstreaming: {
+		url: './flashlsFlowPlayer.swf',
+		hls_debug : false,
+		hls_debug2 : false,
+		hls_lowbufferlength : 3,
+		hls_minbufferlength : -1,
+		hls_maxbufferlength : 100,
+		hls_startfromlevel : -1,
+		hls_seekfromlevel : -1,
+		hls_live_flushurlcache : false,
+		hls_seekmode : "ACCURATE",
+		hls_fragmentloadmaxretry : -1,
+		hls_manifestloadmaxretry : -1,
+		hls_capleveltostage : false,
+		hls_maxlevelcappingmode : "downscale"
+		}
+	},
+	clip: {
+		accelerated: true,
+		url: "http://127.0.0.1:9000/videos/512.m3u8",
+		ipadUrl: "http://127.0.0.1:9000/videos/512.m3u8",
+		urlResolvers: "httpstreaming",
+		lang: "en",
+		provider: "httpstreaming",
+		autoPlay: true,
+		autoBuffering: true
+	},
+	log: {
+		level: 'release',
+		filter: 'org.flowplayer.controller.*'
+	}
+}).ipad();
+</script>
+
+
+</div>
+
+</body>
+</html>

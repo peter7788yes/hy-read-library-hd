@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="zh-TW" xml:lang="zh-TW" xmlns:xml="http://www.w3.org/XML/1998/namespace" >
+
+<head>
+    <title>Rangy Serializer Module Demo</title>
+<!--     <link href="stylesheet.1.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="jquery-2.0.3.js"></script>	
+    <script type="text/javascript" src="rangy-core.js"></script>
+    <script type="text/javascript" src="rangy-serializer.js"></script>
+	<script type="text/javascript" src="android.selection.js"></script>
+    <script type="text/javascript" src="backcanvas.js"></script>	
+    <script type="text/javascript">
+		var viewportwidth;
+		var viewportheight;
+		
+		var documentwidth;
+		var documentheight;
+		
+		var totalpages;
+		var currentpage;
+		var justifieddocumentwidth;
+		
+        function gEBI(id) {
+            return document.getElementById(id);
+        }
+
+        function serializeSelection() {
+            var input = gEBI("serializedSelection");
+            input.value = rangy.serializeSelection();
+            input.focus();
+            input.select();
+        }
+
+        function deserializeSelection() {
+			//rangy.deserializeSelection(gEBI("selectionToDeserialize").value);
+            var output = gEBI("selectionToDeserialize");
+            rangy.deserializeSelection(output.value);
+        }
+
+        function restoreSelection() {
+            //rangy.restoreSelectionFromCookie();
+        }
+
+        function saveSelection() {
+            //rangy.saveSelectionCookie();
+        }
+		
+		function slideUp() {
+			//alert("slideUp()");
+			var currentTopPos = $(window).scrollTop();
+			topPos=currentTopPos+viewportheight;
+			if(currentpage+1 < totalpages)
+			{
+				$(window).scrollTop(topPos);
+				currentpage++;
+			}
+			else if(currentpage+1 == totalpages)
+			{
+				$(window).scrollTop(topPos);
+				currentpage++;
+			}	
+		}
+		
+		function slideBottom() {
+			//alert("slideBottom()");
+			var currentTopPos = $(window).scrollTop();
+			topPos=currentTopPos-viewportheight;
+			if(currentpage-1 > 1)
+			{				
+				$(window).scrollTop(topPos);
+				currentpage--;
+			}
+			else if(currentpage-1 == 1)
+			{
+				$(window).scrollTop(topPos);
+				currentpage--;
+			}			
+		}
+		
+        function slideLeft() {
+			//alert('Left');
+			//$(window).unbind('scroll');
+			//alert("scrollLeft()=" + leftPos);
+			var currentLeftPos = $(window).scrollLeft();
+			//alert("currentLeftPos=" + currentLeftPos);
+			leftPos=currentLeftPos-viewportwidth;//+100;
+			//alert("leftPos=" + leftPos);
+			//while(currentLeftPos != leftPos){
+				//alert("leftPos=" + leftPos);
+			if(currentpage-1 > 1)
+			{
+				//alert("slide once");
+				$(window).scrollLeft(leftPos);
+				currentpage--;
+			}
+			else if(currentpage-1 == 1)
+			{
+				//alert("slide once");
+				$(window).scrollLeft(leftPos);
+				currentpage--;
+			}
+				//currentLeftPos = $(window).scrollLeft();
+			//}
+			//$(window).bind('scroll');
+			
+        }		
+		
+        function slideRight() {
+			//alert('Right');
+			//$(window).unbind('scroll');
+			//alert("scrollLeft()=" + leftPos);
+			var currentLeftPos = $(window).scrollLeft();
+			//alert("currentLeftPos=" + currentLeftPos);
+			var leftPos=currentLeftPos+viewportwidth;//-100;
+			//alert("leftPos=" + leftPos);
+			//alert("leftPos=" + leftPos);
+			//while(currentLeftPos != leftPos){
+				//alert("leftPos=" + leftPos);
+			if(currentpage+1 < totalpages)
+			{
+				//alert("slide once");
+				$(window).scrollLeft(leftPos);
+				currentpage++;
+			}
+			else if(currentpage+1 == totalpages)
+			{
+				//alert("slide once");
+				$(window).scrollLeft(leftPos);
+				currentpage++;
+			}
+			//currentLeftPos = $(window).scrollLeft();
+			//}
+			//$(window).bind('scroll');
+			
+        }		
+
+        function hardRefresh() {
+			//alert("hardRefresh the page=" + document.URL);
+			window.location.assign(document.URL);
+		}
+		
+        function softRefresh() {
+			//alert("softRefresh the page=" + document.URL);
+			window.location.reload();
+		}		
+		
+		$(document).ready(function()
+		{		
+			//alert('ready');
+			
+			rangy.init();
+			
+			// the more standards compliant browsers (mozilla/netscape/opera/IE7) use window.innerWidth and window.innerHeight
+			if (typeof window.innerWidth != 'undefined')
+			{
+				viewportwidth = window.innerWidth;
+				viewportheight = window.innerHeight;
+			}			
+			//alert("viewportwidth=" + viewportwidth);
+			//alert("viewportheight=" + viewportheight);
+			
+			if (typeof $(document).width != 'undefined')
+			{
+				documentwidth = $(document).width();
+				documentheight = $(document).height();
+			}					
+			//alert("documentwidth=" + documentwidth);
+			//alert("documentheight=" + documentheight);	
+			
+			android.selection.pageWidth = viewportwidth; 
+			android.selection.pageHeight = viewportheight;
+			
+			//viewportwidth /= 1.25; //DPI-X
+			//viewportheight /= 1.25; //DPI-Y
+			totalpages = Math.ceil(documentwidth / viewportwidth);
+			//totalpages = Math.ceil(documentheight / viewportheight);
+			//alert("total page=" + totalpages);
+			
+			justifieddocumentwidth = viewportwidth * totalpages;
+			//justifieddocumentheight = viewportheight * totalpages;
+			//alert("justifieddocumentheight=" + justifieddocumentheight);
+					
+			currentpage = 1;
+		});
+		
+        window.onload = function() {
+            //alert('onload');
+
+			// Reset the form
+			$(":reset");
+		
+            // Enable buttons
+            var serializerModule = rangy.modules.Serializer;
+            if (rangy.supported && serializerModule && serializerModule.supported) {
+                gEBI("serializedSelection").disabled = false;
+                var serializeButton = gEBI("serializeButton");
+                serializeButton.disabled = false;
+                serializeButton.ontouchstart = serializeButton.onclick = serializeSelection;
+
+                gEBI("selectionToDeserialize").disabled = false;
+                var deserializeButton = gEBI("deserializeButton");
+                deserializeButton.disabled = false;
+                deserializeButton.ontouchstart = deserializeButton.onclick = deserializeSelection;
+
+                // Display the control range element in IE
+                if (rangy.features.implementsControlRange) {
+                    gEBI("controlRange").style.display = "block";
+                }
+
+                // Restore the selection from a previous visit to this page
+                //restoreSelection();
+				
+                //gEBI("slideLeft").disabled = false;
+				//slideBottom
+                var slideMinusButton = gEBI("slideMinusButton");
+                slideMinusButton.disabled = false;
+                slideMinusButton.ontouchstart = //slideLeftButton.onclick = slideLeft;	
+				slideMinusButton.onclick = slideLeft;	
+				
+                //gEBI("slideRight").disabled = false;
+				//slideUp
+                var slidePlusButton = gEBI("slidePlusButton");
+                slidePlusButton.disabled = false;
+                slidePlusButton.ontouchstart = //slideRightButton.onclick = slideRight;
+				slidePlusButton.onclick = slideRight;
+
+                var hardRefreshButton = gEBI("hardRefreshButton");
+                hardRefreshButton.disabled = false;
+                hardRefreshButton.ontouchstart = hardRefreshButton.onclick = hardRefresh;
+				
+                var softRefreshButton = gEBI("softRefreshButton");
+                softRefreshButton.disabled = false;
+                softRefreshButton.ontouchstart = softRefreshButton.onclick = softRefresh;				
+            }
+			
+			//makeABackCanvas(justifieddocumentwidth, documentheight, false);
+			//single-page mode
+			//Horizontal-writing
+			//alert("justifieddocumentwidth="+justifieddocumentwidth);			
+			
+			makeABackCanvasWithColumnnumber(justifieddocumentwidth, viewportheight, true, 1)
+			//Vertical-writing
+			//makeABackCanvasWithColumnnumber(viewportwidth, justifieddocumentheight, false, 1)		
+			$(window).scrollLeft(0);
+			//$(window).scrollTop(0);
+			
+        };
+
+        window.onbeforeunload = saveSelection;
+        
+    </script> -->
+</head>
+<body>
+	
+
+<h1>魯迅自序</h1>
+
+<p>　　我在年青時候也曾經做過許多夢，後來大半忘卻了，但自己也並不以為可惜。所謂回憶者，雖說可以使人歡欣，有時也不免使人寂寞，使精神的絲縷還牽著已逝的寂寞時光，又有什麼意味呢，而我偏苦於不能全忘卻，這不能全忘的一部分，到現在便成了《吶喊》的來由。
+</p>
+<p>
+　　Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius.
+</p>
+<p>　　我在年青時候也曾經做過許多夢，後來大半忘卻了，但自己也並不以為可惜。所謂回憶者，雖說可以使人歡欣，有時也不免使人寂寞，使精神的絲縷還牽著已逝的寂寞時光，又有什麼意味呢，而我偏苦於不能全忘卻，這不能全忘的一部分，到現在便成了《吶喊》的來由。
+</p>
+<p>
+　　我有四年多，曾經常常——幾乎是每天，出入於質鋪和藥店裏，年紀可是忘卻了，總之是藥店的櫃檯正和我一樣高，質鋪的是比我高一倍。我從一倍高的櫃檯外送上衣服或首飾去，在侮蔑裏接了錢，再到一樣高的櫃檯上給我久病的父親去買藥。回家之後，又須忙別的事了，因為開方的醫生是最有名的，以此所用的藥引也奇特：冬天的蘆根，經霜三年的甘蔗，蟋蟀要原對的，結子的平地木⋯⋯多不是容易辦到的東西。然而我的父親終於日重一日的亡故了。
+</p>
+<p>　　我在年青時候也曾經做過許多夢，後來大半忘卻了，但自己也並不以為可惜。所謂回憶者，雖說可以使人歡欣，有時也不免使人寂寞，使精神的絲縷還牽著已逝的寂寞時光，又有什麼意味呢，而我偏苦於不能全忘卻，這不能全忘的一部分，到現在便成了《吶喊》的來由。
+</p>
+<p>
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius.
+</p>
+<p>　　我在年青時候也曾經做過許多夢，後來大半忘卻了，但自己也並不以為可惜。所謂回憶者，雖說可以使人歡欣，有時也不免使人寂寞，使精神的絲縷還牽著已逝的寂寞時光，又有什麼意味呢，而我偏苦於不能全忘卻，這不能全忘的一部分，到現在便成了《吶喊》的來由。
+</p>
+<p>
+　　我有四年多，曾經常常——幾乎是每天，出入於質鋪和藥店裏，年紀可是忘卻了，總之是藥店的櫃檯正和我一樣高，質鋪的是比我高一倍。我從一倍高的櫃檯外送上衣服或首飾去，在侮蔑裏接了錢，再到一樣高的櫃檯上給我久病的父親去買藥。回家之後，又須忙別的事了，因為開方的醫生是最有名的，以此所用的藥引也奇特：冬天的蘆根，經霜三年的甘蔗，蟋蟀要原對的，結子的平地木⋯⋯多不是容易辦到的東西。然而我的父親終於日重一日的亡故了。
+</p><p>　　我在年青時候也曾經做過許多夢，後來大半忘卻了，但自己也並不以為可惜。所謂回憶者，雖說可以使人歡欣，有時也不免使人寂寞，使精神的絲縷還牽著已逝的寂寞時光，又有什麼意味呢，而我偏苦於不能全忘卻，這不能全忘的一部分，到現在便成了《吶喊》的來由。
+</p>
+<p>
+　　我有四年多，曾經常常——幾乎是每天，出入於質鋪和藥店裏，年紀可是忘卻了，總之是藥店的櫃檯正和我一樣高，質鋪的是比我高一倍。我從一倍高的櫃檯外送上衣服或首飾去，在侮蔑裏接了錢，再到一樣高的櫃檯上給我久病的父親去買藥。回家之後，又須忙別的事了，因為開方的醫生是最有名的，以此所用的藥引也奇特：冬天的蘆根，經霜三年的甘蔗，蟋蟀要原對的，結子的平地木⋯⋯多不是容易辦到的東西。然而我的父親終於日重一日的亡故了。
+</p>
+<p>　　我在年青時候也曾經做過許多夢，後來大半忘卻了，但自己也並不以為可惜。所謂回憶者，雖說可以使人歡欣，有時也不免使人寂寞，使精神的絲縷還牽著已逝的寂寞時光，又有什麼意味呢，而我偏苦於不能全忘卻，這不能全忘的一部分，到現在便成了《吶喊》的來由。
+</p>
+<p>
+　　我有四年多，曾經常常——幾乎是每天，出入於質鋪和藥店裏，年紀可是忘卻了，總之是藥店的櫃檯正和我一樣高，質鋪的是比我高一倍。我從一倍高的櫃檯外送上衣服或首飾去，在侮蔑裏接了錢，再到一樣高的櫃檯上給我久病的父親去買藥。回家之後，又須忙別的事了，因為開方的醫生是最有名的，以此所用的藥引也奇特：冬天的蘆根，經霜三年的甘蔗，蟋蟀要原對的，結子的平地木⋯⋯多不是容易辦到的東西。然而我的父親終於日重一日的亡故了。
+</p>
+<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius.
+</p>
+<p>
+　　我有四年多，曾經常常——幾乎是每天，出入於質鋪和藥店裏，年紀可是忘卻了，總之是藥店的櫃檯正和我一樣高，質鋪的是比我高一倍。我從一倍高的櫃檯外送上衣服或首飾去，在侮蔑裏接了錢，再到一樣高的櫃檯上給我久病的父親去買藥。回家之後，又須忙別的事了，因為開方的醫生是最有名的，以此所用的藥引也奇特：冬天的蘆根，經霜三年的甘蔗，蟋蟀要原對的，結子的平地木⋯⋯多不是容易辦到的東西。然而我的父親終於日重一日的亡故了。
+</p>
+<p>　　我在年青時候也曾經做過許多夢，後來大半忘卻了，但自己也並不以為可惜。所謂回憶者，雖說可以使人歡欣，有時也不免使人寂寞，使精神的絲縷還牽著已逝的寂寞時光，又有什麼意味呢，而我偏苦於不能全忘卻，這不能全忘的一部分，到現在便成了《吶喊》的來由。
+</p>
+<p>
+　　我有四年多，曾經常常——幾乎是每天，出入於質鋪和藥店裏，年紀可是忘卻了，總之是藥店的櫃檯正和我一樣高，質鋪的是比我高一倍。我從一倍高的櫃檯外送上衣服或首飾去，在侮蔑裏接了錢，再到一樣高的櫃檯上給我久病的父親去買藥。回家之後，又須忙別的事了，因為開方的醫生是最有名的，以此所用的藥引也奇特：冬天的蘆根，經霜三年的甘蔗，蟋蟀要原對的，結子的平地木⋯⋯多不是容易辦到的東西。然而我的父親終於日重一日的亡故了。
+</p>
+<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius.
+</p>
+<p>
+　　我有四年多，曾經常常——幾乎是每天，出入於質鋪和藥店裏，年紀可是忘卻了，總之是藥店的櫃檯正和我一樣高，質鋪的是比我高一倍。我從一倍高的櫃檯外送上衣服或首飾去，在侮蔑裏接了錢，再到一樣高的櫃檯上給我久病的父親去買藥。回家之後，又須忙別的事了，因為開方的醫生是最有名的，以此所用的藥引也奇特：冬天的蘆根，經霜三年的甘蔗，蟋蟀要原對的，結子的平地木⋯⋯多不是容易辦到的東西。然而我的父親終於日重一日的亡故了。
+</p>
+<p>　　我在年青時候也曾經做過許多夢，後來大半忘卻了，但自己也並不以為可惜。所謂回憶者，雖說可以使人歡欣，有時也不免使人寂寞，使精神的絲縷還牽著已逝的寂寞時光，又有什麼意味呢，而我偏苦於不能全忘卻，這不能全忘的一部分，到現在便成了《吶喊》的來由。
+</p>
+<p>
+　　我有四年多，曾經常常——幾乎是每天，出入於質鋪和藥店裏，年紀可是忘卻了，總之是藥店的櫃檯正和我一樣高，質鋪的是比我高一倍。我從一倍高的櫃檯外送上衣服或首飾去，在侮蔑裏接了錢，再到一樣高的櫃檯上給我久病的父親去買藥。回家之後，又須忙別的事了，因為開方的醫生是最有名的，以此所用的藥引也奇特：冬天的蘆根，經霜三年的甘蔗，蟋蟀要原對的，結子的平地木⋯⋯多不是容易辦到的東西。然而我的父親終於日重一日的亡故了。 Wesley
+</p>
+</body>
+</html>

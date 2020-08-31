@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="PaperLess_Emeeting.Home" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Home" Width="1024" Height="640" xmlns:paperless_emeeting="clr-namespace:PaperLess_Emeeting;assembly=PaperLess_Emeeting_NTPC">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition />
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Name="Row1" Height="85" />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+    <Image Name="imgBeta" Grid.Row="0" Panel.ZIndex="3" Visibility="Collapsed" Source="images/beta.png" Width="83" Height="83" HorizontalAlignment="Left" VerticalAlignment="Top" />
+    <DockPanel Name="DP1" Grid.Row="0" ZIndex="2" LastChildFill="True" Height="{Binding ElementName=Row1, Path=ActualWidth}" Width="{Binding ElementName=dp, Path=ActualWidth}">
+      <Panel.Background>
+        <ImageBrush ImageSource="images/tabBarBg@2x.png" Stretch="Fill" />
+      </Panel.Background>
+      <Image Name="imgLogo" Margin="5" Width="260" Height="65" HorizontalAlignment="Left" VerticalAlignment="Top" />
+      <Grid Name="blockUserName" Margin="-5" Visibility="Collapsed">
+        <TextBlock Name="txtUserName" Panel.ZIndex="99" TextAlignment="Center" Padding="0,8,0,6" FontSize="16" Height="auto" Width="110" VerticalAlignment="Top" />
+        <Rectangle RadiusX="6" RadiusY="6" Stroke="#FFFFFFFF" Fill="#FFFFFFFF" Opacity=".8" StrokeThickness="3" VerticalAlignment="Top" Width="{Binding Width, ElementName=txtUserName}" Height="{Binding ActualHeight, ElementName=txtUserName}" />
+      </Grid>
+      <StackPanel Name="btnSP" Margin="0,0,10,0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" />
+    </DockPanel>
+    <DockPanel Grid.Row="1" ZIndex="1">
+      <Panel.Background>
+        <ImageBrush ImageSource="images/home_bg@2x.png" />
+      </Panel.Background>
+      <ContentControl Name="CC" />
+    </DockPanel>
+  </Grid>
+</Window>

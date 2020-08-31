@@ -1,0 +1,927 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="PaperLess_Emeeting.HTML5ReadWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:cs="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf" xmlns:local="clr-namespace:PaperLess_Emeeting" WindowStyle="None" UseLayoutRounding="True" WindowState="Maximized" ResizeMode="CanResize" Title="MainWindow" Height="350" Width="525" SizeChanged="Window_SizeChanged" MouseWheel="Window_MouseWheel">
+  <FrameworkElement.Resources>
+    <ResourceDictionary>
+      <local:thumbNailListBoxWidthHeightConverter x:Key="thumbNailListBoxConverter" />
+      <local:BooleanMediaDownloadStatusConverter x:Key="booleanMediaDownloadStatusConverter" />
+      <local:UriToCachedImageConverter x:Key="uriToCachedImageConverter" />
+      <Style x:Key="VisibleIfNotDownloaded" TargetType="{x:Type Border}">
+        <Style.Triggers>
+          <DataTrigger Value="False" Binding="{Binding isDownloaded, Mode=TwoWay, NotifyOnSourceUpdated=True}">
+            <Setter Property="Background" Value="#4C000000" />
+          </DataTrigger>
+        </Style.Triggers>
+      </Style>
+      <Style x:Key="SearchListBoxStyle" TargetType="{x:Type ListBox}">
+        <Setter Property="UIElement.SnapsToDevicePixels" Value="True" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="{x:Type ListBox}">
+              <Border Name="Border">
+                <StackPanel Orientation="Vertical">
+                  <ScrollViewer Focusable="False" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Width="Auto" Height="370">
+                    <StackPanel IsItemsHost="True" Orientation="Vertical" />
+                  </ScrollViewer>
+                </StackPanel>
+              </Border>
+              <ControlTemplate.Triggers>
+                <Trigger Property="ItemsControl.IsGrouping" Value="True">
+                  <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
+                </Trigger>
+              </ControlTemplate.Triggers>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+        <Setter Property="ItemContainerStyle">
+          <Setter.Value>
+            <Style TargetType="{x:Type ListBoxItem}">
+              <Style.Triggers>
+                <Trigger Property="UIElement.IsMouseOver" Value="True">
+                  <Setter Property="Background" Value="#E4E0E1" />
+                </Trigger>
+              </Style.Triggers>
+            </Style>
+          </Setter.Value>
+        </Setter>
+        <Setter Property="ItemTemplate">
+          <Setter.Value>
+            <DataTemplate>
+              <Grid Margin="5">
+                <StackPanel Orientation="Horizontal" Height="100">
+                  <Border BorderBrush="#DFDFDF" BorderThickness="2">
+                    <Image Stretch="Uniform" Source="{Binding Path=imagePath}" />
+                  </Border>
+                  <Grid Margin="13,12,30,10">
+                    <TextBlock LineHeight="20" LineStackingStrategy="BlockLineHeight" VerticalAlignment="Top" FontSize="14" Foreground="#212121" TextWrapping="WrapWithOverflow" Width="230" Text="{Binding targetLine}" />
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" TextElement.FontSize="13" TextElement.Foreground="#444444">
+                      <TextBlock Text="{Binding the, Source={StaticResource Resources}}" />
+                      <TextBlock Text="{Binding showedPage}" />
+                      <TextBlock Text="{Binding page, Source={StaticResource Resources}}" />
+                    </StackPanel>
+                  </Grid>
+                </StackPanel>
+              </Grid>
+            </DataTemplate>
+          </Setter.Value>
+        </Setter>
+      </Style>
+      <Style x:Key="ListBoxStyle" TargetType="{x:Type ListBox}">
+        <Setter Property="UIElement.SnapsToDevicePixels" Value="True" />
+        <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="{x:Type ListBox}">
+              <Border Name="Border" BorderThickness="1" CornerRadius="2">
+                <ScrollViewer Name="SVInLV" Style="{StaticResource myScrollViewerStyle2}" Width="{Binding ElementName=mainGrid, Path=ActualWidth, ConverterParameter=30, Converter={StaticResource thumbNailListBoxConverter}}">
+                  <WrapPanel Name="wrapPanel" IsItemsHost="True" Orientation="Horizontal" />
+                </ScrollViewer>
+              </Border>
+              <ControlTemplate.Triggers>
+                <Trigger Property="ItemsControl.IsGrouping" Value="True">
+                  <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
+                </Trigger>
+              </ControlTemplate.Triggers>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+        <Setter Property="ItemTemplate">
+          <Setter.Value>
+            <DataTemplate>
+              <Grid>
+                <Grid Margin="5">
+                  <Border BorderBrush="#fefefe" BorderThickness="3">
+                    <Image Name="imageInListBox" Stretch="Uniform" Source="{Binding Path=leftImagePath, Converter={StaticResource uriToCachedImageConverter}}" />
+                  </Border>
+                  <Border Style="{StaticResource VisibleIfNotDownloaded}" />
+                </Grid>
+                <Grid>
+                  <Border Background="#4C000000" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="30" Height="20">
+                    <TextBlock FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FFFFFF" FontWeight="Bold" Text="{Binding pageIndex}" />
+                  </Border>
+                </Grid>
+              </Grid>
+            </DataTemplate>
+          </Setter.Value>
+        </Setter>
+        <Setter Property="ItemContainerStyle">
+          <Setter.Value>
+            <Style TargetType="{x:Type ListBoxItem}">
+              <Setter Property="Height" Value="120" />
+              <Setter Property="VerticalAlignment" Value="Top" />
+              <Setter Property="Margin" Value="0,10,0,0" />
+            </Style>
+          </Setter.Value>
+        </Setter>
+      </Style>
+      <Style x:Key="{x:Type RadioButton}" x:Name="RadioButtonStyle" TargetType="{x:Type RadioButton}">
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="{x:Type RadioButton}">
+              <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" Uid="Border_40">
+                <ContentPresenter Name="Content" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" RenderTransformOrigin="0.5,0.5" Uid="ContentPresenter_3" />
+              </Border>
+              <ControlTemplate.Triggers>
+                <Trigger Property="IsPressed" Value="True">
+                  <Setter TargetName="Content" Property="RenderTransform">
+                    <Setter.Value>
+                      <ScaleTransform ScaleY="0.9" ScaleX="0.9" />
+                    </Setter.Value>
+                  </Setter>
+                </Trigger>
+              </ControlTemplate.Triggers>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+        <Style.BasedOn>
+          <Style TargetType="{x:Type ToggleButton}">
+            <Style.BasedOn>
+              <Style TargetType="{x:Type ButtonBase}">
+                <Setter Property="Focusable" Value="False" />
+                <Setter Property="UIElement.Opacity" Value="1" />
+                <Setter Property="FrameworkElement.Cursor" Value="Hand" />
+                <Setter Property="Background" Value="#00FFFFFF" />
+                <Setter Property="Padding" Value="3,1" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="MinWidth" Value="0" />
+                <Setter Property="MinHeight" Value="0" />
+                <Setter Property="Template">
+                  <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                      <Border Background="{TemplateBinding Background}" Uid="Border_39">
+                        <ContentPresenter Name="Content" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" RenderTransformOrigin="0.5,0.5" Uid="ContentPresenter_2" />
+                      </Border>
+                      <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="True">
+                          <Setter TargetName="Content" Property="RenderTransform">
+                            <Setter.Value>
+                              <ScaleTransform ScaleY="1.1" ScaleX="1.1" />
+                            </Setter.Value>
+                          </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                          <Setter TargetName="Content" Property="RenderTransform">
+                            <Setter.Value>
+                              <ScaleTransform ScaleY="0.9" ScaleX="0.9" />
+                            </Setter.Value>
+                          </Setter>
+                        </Trigger>
+                      </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                  </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                  <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="UIElement.Opacity" Value="0.3" />
+                  </Trigger>
+                  <Trigger Property="UIElement.IsMouseOver" Value="True">
+                    <Setter Property="UIElement.Opacity" Value="1.1" />
+                  </Trigger>
+                </Style.Triggers>
+              </Style>
+            </Style.BasedOn>
+            <Style.Triggers>
+              <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Visibility" Value="Collapsed" />
+              </Trigger>
+              <Trigger Property="ToggleButton.IsChecked" Value="True">
+                <Setter Property="UIElement.Opacity" Value="1" />
+              </Trigger>
+            </Style.Triggers>
+          </Style>
+        </Style.BasedOn>
+      </Style>
+      <Style x:Key="RadioButtonStyle" TargetType="{x:Type RadioButton}">
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="{x:Type RadioButton}">
+              <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" Uid="Border_40">
+                <ContentPresenter Name="Content" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" RenderTransformOrigin="0.5,0.5" Uid="ContentPresenter_3" />
+              </Border>
+              <ControlTemplate.Triggers>
+                <Trigger Property="IsPressed" Value="True">
+                  <Setter TargetName="Content" Property="RenderTransform">
+                    <Setter.Value>
+                      <ScaleTransform ScaleY="0.9" ScaleX="0.9" />
+                    </Setter.Value>
+                  </Setter>
+                </Trigger>
+              </ControlTemplate.Triggers>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+        <Style.BasedOn>
+          <Style TargetType="{x:Type ToggleButton}">
+            <Style.BasedOn>
+              <Style TargetType="{x:Type ButtonBase}">
+                <Setter Property="Focusable" Value="False" />
+                <Setter Property="UIElement.Opacity" Value="1" />
+                <Setter Property="FrameworkElement.Cursor" Value="Hand" />
+                <Setter Property="Background" Value="#00FFFFFF" />
+                <Setter Property="Padding" Value="3,1" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="MinWidth" Value="0" />
+                <Setter Property="MinHeight" Value="0" />
+                <Setter Property="Template">
+                  <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                      <Border Background="{TemplateBinding Background}" Uid="Border_39">
+                        <ContentPresenter Name="Content" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" RenderTransformOrigin="0.5,0.5" Uid="ContentPresenter_2" />
+                      </Border>
+                      <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="True">
+                          <Setter TargetName="Content" Property="RenderTransform">
+                            <Setter.Value>
+                              <ScaleTransform ScaleY="1.1" ScaleX="1.1" />
+                            </Setter.Value>
+                          </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                          <Setter TargetName="Content" Property="RenderTransform">
+                            <Setter.Value>
+                              <ScaleTransform ScaleY="0.9" ScaleX="0.9" />
+                            </Setter.Value>
+                          </Setter>
+                        </Trigger>
+                      </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                  </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                  <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="UIElement.Opacity" Value="0.3" />
+                  </Trigger>
+                  <Trigger Property="UIElement.IsMouseOver" Value="True">
+                    <Setter Property="UIElement.Opacity" Value="1.1" />
+                  </Trigger>
+                </Style.Triggers>
+              </Style>
+            </Style.BasedOn>
+            <Style.Triggers>
+              <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Visibility" Value="Collapsed" />
+              </Trigger>
+              <Trigger Property="ToggleButton.IsChecked" Value="True">
+                <Setter Property="UIElement.Opacity" Value="1" />
+              </Trigger>
+            </Style.Triggers>
+          </Style>
+        </Style.BasedOn>
+      </Style>
+    </ResourceDictionary>
+  </FrameworkElement.Resources>
+  <Grid Name="mainGrid">
+    <FlowDocumentReader Name="FR" Panel.ZIndex="-99" Grid.Row="0" />
+    <DockPanel Language="en-us" LastChildFill="True" Uid="DockPanel_3">
+      <Canvas Name="ToolBarSensor" Visibility="Collapsed" Background="#00FFFFFF" DockPanel.Dock="Top" ZIndex="500" HorizontalAlignment="Stretch" Height="1" Width="{Binding ElementName=ToolBarInReader, Path=ActualWidth}" />
+      <Grid Name="PenMemoToolBar" Height="30" DockPanel.Dock="Top" ZIndex="500" HorizontalAlignment="Stretch" Visibility="Collapsed">
+        <Panel.Background>
+          <ImageBrush ImageSource="images/btn_orang_bg.png" />
+        </Panel.Background>
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="29" />
+            <ColumnDefinition Width="29" />
+            <ColumnDefinition Width="29" />
+            <ColumnDefinition Width="29" />
+            <ColumnDefinition Width="30" />
+          </Grid.ColumnDefinitions>
+          <RadioButton Name="BackToOriToolBar" Grid.Column="4" ToolTip="回到閱讀模式" Uid="RadioButton_2" Style="{StaticResource RadioButtonStyle}" HorizontalAlignment="Left" Click="PenMemoButton_Checked">
+            <ContentControl.Content>
+              <Image Width="40" Height="40" SnapsToDevicePixels="True" Margin="-10">
+                <FrameworkElement.Style>
+                  <Style TargetType="{x:Type Image}">
+                    <Setter Property="Source" Value="images/ReadWindow/i_book.png" />
+                  </Style>
+                </FrameworkElement.Style>
+              </Image>
+            </ContentControl.Content>
+          </RadioButton>
+        </Grid>
+      </Grid>
+      <Grid Name="ToolBarInReader" Height="30" DockPanel.Dock="Top" ZIndex="500" HorizontalAlignment="Stretch" Uid="Grid_31">
+        <Panel.Background>
+          <ImageBrush ImageSource="images/ReadWindow/header_bg_bar.png" />
+        </Panel.Background>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Name="txtPage" FontWeight="Bold" Grid.Column="0" Grid.ColumnSpan="4" Panel.ZIndex="600" HorizontalAlignment="Center" Foreground="#FFFFFFFF" VerticalAlignment="Center" />
+        <Grid Column="0" HorizontalAlignment="Left" Uid="StackPanel_5" ZIndex="500">
+          <StackPanel Orientation="Horizontal">
+            <RadioButton Name="BackToBookShelfButton" ToolTip="關閉" Uid="RadioButton_1" Style="{StaticResource RadioButtonStyle}" Click="BackToBookShelfButton_Click">
+              <ContentControl.Content>
+                <Image Width="24" Height="24" SnapsToDevicePixels="True">
+                  <FrameworkElement.Style>
+                    <Style TargetType="{x:Type Image}">
+                      <Setter Property="Source" Value="images/ReadWindow/btn_backtobookShelf.png" />
+                    </Style>
+                  </FrameworkElement.Style>
+                </Image>
+              </ContentControl.Content>
+            </RadioButton>
+          </StackPanel>
+        </Grid>
+        <Grid Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="-5,-5,5,-5">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <StackPanel Name="MediasStackPanel" Grid.Column="0" Orientation="Horizontal" Uid="StackPanel_4" Margin="-5">
+            <ComboBox Name="cbBooks" Height="22" Width="200" ToolTip="{Binding SelectedItem.Key, RelativeSource={RelativeSource Self}}" />
+            <RadioButton Name="SearchButton" IsChecked="False" ToolTip="搜尋" Style="{StaticResource RadioButtonStyle}" Click="SearchButton_Checked">
+              <ContentControl.Content>
+                <Image Width="24" Height="24" SnapsToDevicePixels="True">
+                  <FrameworkElement.Style>
+                    <Style TargetType="{x:Type Image}">
+                      <Setter Property="Source" Value="images/ReadWindow/btn_09.png" />
+                      <Style.Triggers>
+                        <DataTrigger Value="True" Binding="{Binding ElementName=SearchButton, Path=IsChecked}">
+                          <Setter Property="Source" Value="images/ReadWindow/btn_09_over.png" />
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </FrameworkElement.Style>
+                </Image>
+              </ContentControl.Content>
+            </RadioButton>
+            <RadioButton Name="PenMemoButton" IsChecked="False" ToolTip="螢光筆" Style="{StaticResource RadioButtonStyle}" Click="PenMemoButton_Checked">
+              <ContentControl.Content>
+                <Image Width="24" Height="24" SnapsToDevicePixels="True">
+                  <FrameworkElement.Style>
+                    <Style TargetType="{x:Type Image}">
+                      <Setter Property="Source" Value="images/ReadWindow/btn_15.png" />
+                      <Style.Triggers>
+                        <DataTrigger Value="True" Binding="{Binding ElementName=PenMemoButton, Path=IsChecked}">
+                          <Setter Property="Source" Value="images/ReadWindow/btn_15_over.png" />
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </FrameworkElement.Style>
+                </Image>
+              </ContentControl.Content>
+            </RadioButton>
+            <RadioButton Name="BookMarkButton" GroupName="BookMarkMode" IsChecked="False" ToolTip="書籤" Style="{StaticResource RadioButtonStyle}" Click="BookMarkButton_Checked">
+              <ContentControl.Content>
+                <Image Width="24" Height="24" SnapsToDevicePixels="True">
+                  <FrameworkElement.Style>
+                    <Style TargetType="{x:Type Image}">
+                      <Setter Property="Source" Value="images/ReadWindow/btn_04.png" />
+                      <Style.Triggers>
+                        <DataTrigger Value="True" Binding="{Binding ElementName=BookMarkButton, Path=IsChecked}">
+                          <Setter Property="Source" Value="images/ReadWindow/btn_04_over.png" />
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </FrameworkElement.Style>
+                </Image>
+              </ContentControl.Content>
+            </RadioButton>
+            <RadioButton Name="NoteButton" GroupName="NoteMode" IsChecked="False" ToolTip="註記" Uid="RadioButton_1" Style="{StaticResource RadioButtonStyle}" Click="NoteButton_Checked">
+              <ContentControl.Content>
+                <Image Width="24" Height="24" SnapsToDevicePixels="True">
+                  <FrameworkElement.Style>
+                    <Style TargetType="{x:Type Image}">
+                      <Setter Property="Source" Value="images/ReadWindow/btn_11.png" />
+                      <Style.Triggers>
+                        <DataTrigger Value="True" Binding="{Binding ElementName=NoteButton, Path=IsChecked}">
+                          <Setter Property="Source" Value="images/ReadWindow/btn_11_over.png" />
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </FrameworkElement.Style>
+                </Image>
+              </ContentControl.Content>
+            </RadioButton>
+            <RadioButton Name="ShareButton" IsChecked="False" Uid="RadioButton_1" Style="{StaticResource RadioButtonStyle}" Click="ShareButton_Checked">
+              <ContentControl.Content>
+                <Image Width="24" Height="24" SnapsToDevicePixels="True">
+                  <FrameworkElement.Style>
+                    <Style TargetType="{x:Type Image}">
+                      <Setter Property="Source" Value="images/ReadWindow/btn_12.png" />
+                      <Style.Triggers>
+                        <DataTrigger Value="True" Binding="{Binding ElementName=ShareButton, Path=IsChecked}">
+                          <Setter Property="Source" Value="images/ReadWindow/btn_12_over.png" />
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </FrameworkElement.Style>
+                </Image>
+              </ContentControl.Content>
+            </RadioButton>
+          </StackPanel>
+        </Grid>
+        <Grid Column="3" HorizontalAlignment="Right" Uid="Grid_32" VerticalAlignment="Center">
+          <ToggleButton Name="syncButton" Grid.Column="4" Click="syncButton_Click">
+            <ContentControl.Content>
+              <Image Width="27" Height="24" SnapsToDevicePixels="True">
+                <FrameworkElement.Style>
+                  <Style TargetType="{x:Type Image}">
+                    <Setter Property="Source" Value="images/ReadWindow/screenSync_Off.png" />
+                    <Style.Triggers>
+                      <DataTrigger Value="True" Binding="{Binding ElementName=syncButton, Path=IsChecked}">
+                        <Setter Property="Source" Value="images/ReadWindow/screenSync_ON.png" />
+                      </DataTrigger>
+                    </Style.Triggers>
+                  </Style>
+                </FrameworkElement.Style>
+              </Image>
+            </ContentControl.Content>
+            <FrameworkElement.Style>
+              <Style TargetType="{x:Type ToggleButton}">
+                <Setter Property="Background" Value="#00FFFFFF" />
+                <Setter Property="Foreground" Value="#FF000000" />
+                <Setter Property="Template">
+                  <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                      <Border Background="#00FFFFFF" Uid="Border_41" Padding="{Binding Padding, RelativeSource={RelativeSource TemplatedParent}}">
+                        <ContentPresenter Name="Content" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" RenderTransformOrigin="0.5,0.5" Uid="ContentPresenter_3" />
+                      </Border>
+                      <ControlTemplate.Triggers>
+                        <Trigger Property="UIElement.IsMouseOver" Value="True">
+                          <Setter TargetName="Content" Property="RenderTransform">
+                            <Setter.Value>
+                              <ScaleTransform ScaleY="1.1" ScaleX="1.1" />
+                            </Setter.Value>
+                          </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                          <Setter TargetName="Content" Property="RenderTransform">
+                            <Setter.Value>
+                              <ScaleTransform ScaleY="1" ScaleX="1" />
+                            </Setter.Value>
+                          </Setter>
+                        </Trigger>
+                      </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                  </Setter.Value>
+                </Setter>
+              </Style>
+            </FrameworkElement.Style>
+          </ToggleButton>
+          <Image Name="diableImg" Visibility="Collapsed" Width="27" Height="24" Grid.Column="4" SnapsToDevicePixels="True" Source="images/ReadWindow/screenSync_Off_Disable.png" />
+        </Grid>
+        <Canvas Name="toolbarSyncCanvas" ZIndex="200" Visibility="Collapsed" Background="#00FFFFFF" Grid.ColumnSpan="3" />
+      </Grid>
+      <Grid Name="Grid_33" Uid="Grid_33">
+        <Canvas Name="MediaTableCanvas" ZIndex="12" Visibility="Collapsed" Background="#00FFFFFF" Width="{Binding ElementName=mainGrid, Path=ActualWidth}" Height="{Binding ElementName=mainGrid, Path=ActualHeight}" MouseLeftButtonDown="MediaTableCanvas_MouseLeftButtonDown">
+          <Border Name="mediaListBorder" Panel.ZIndex="13" CornerRadius="6" BorderBrush="#FF808080" Background="#FFD3D3D3" BorderThickness="2" Padding="8" Canvas.Top="10" Canvas.Right="30">
+            <StackPanel Name="mediaListPanel" ZIndex="13" Background="#FFFFFFFF" Width="350" Height="400" />
+          </Border>
+        </Canvas>
+        <Canvas Name="stageCanvas" ZIndex="3" Background="#00FFFFFF" RenderTransformOrigin="0.5, 0.5" IsHitTestVisible="False" />
+        <InkCanvas Name="penMemoCanvas" Background="#00FFFFFF" EditingMode="None" Panel.ZIndex="2" RenderTransformOrigin="0.5, 0.5" IsHitTestVisible="False" VerticalAlignment="Top" />
+        <Canvas Name="PopupControlCanvas" ZIndex="899" Visibility="Collapsed" Background="#FFD3D3D3" Opacity="0.1" Width="{Binding ElementName=mainGrid, Path=ActualWidth}" Height="{Binding ElementName=mainGrid, Path=ActualHeight}" MouseLeftButtonDown="PopupControlCanvas_MouseLeftButtonDown" />
+        <Canvas Name="HiddenControlCanvas" ZIndex="800" Visibility="Collapsed" Background="#212020" Width="{Binding ElementName=mainGrid, Path=ActualWidth}" Height="{Binding ElementName=mainGrid, Path=ActualHeight}" />
+        <Canvas Name="watermarkCanvas" ZIndex="3" Background="#00FFFFFF" RenderTransformOrigin="0.5, 0.5" IsHitTestVisible="False">
+          <Grid Width="{Binding ElementName=web_view, Path=ActualWidth}" Height="{Binding ElementName=web_view, Path=ActualHeight}">
+            <TextBlock Name="watermarkTextBlock" Opacity="0.5" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF000000" TextElement.FontWeight="Bold" RenderTransformOrigin="0.5,0.5" TextElement.FontSize="60" />
+          </Grid>
+        </Canvas>
+        <cs:WebView Name="web_view" Panel.ZIndex="1" />
+        <RadioButton Name="leftPageButton" Panel.ZIndex="10" VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource RadioButtonStyle}" Click="leftPageButton_Click">
+          <ContentControl.Content>
+            <Image Height="44" Width="44" Source="images/ReadWindow/arrow_left_epub.png" SnapsToDevicePixels="True" />
+          </ContentControl.Content>
+        </RadioButton>
+        <RadioButton Name="rightPageButton" Panel.ZIndex="10" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource RadioButtonStyle}" Click="rightPageButton_Click">
+          <ContentControl.Content>
+            <Image Height="44" Width="44" Source="images/ReadWindow/arrow_right_epub.png" SnapsToDevicePixels="True" />
+          </ContentControl.Content>
+        </RadioButton>
+        <StackPanel Orientation="Horizontal" ZIndex="1000" Margin="10" HorizontalAlignment="Right" VerticalAlignment="Top">
+          <Image Name="statusBMK" Visibility="Collapsed" Source="images/status-withBookmark@2x.png" Panel.ZIndex="10" SnapsToDevicePixels="True" Width="56" Height="56" HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="1" Margin="0,0,0,0" />
+          <Image Name="statusMemo" Visibility="Collapsed" Source="images/status-withMemo@2x.png" Panel.ZIndex="10" SnapsToDevicePixels="True" Width="56" Height="56" HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="1" Margin="-10,0,10,0" />
+          <Image Name="StatusOnairOff" Visibility="Collapsed" Panel.ZIndex="10" SnapsToDevicePixels="True" Width="80" Height="80" HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="1">
+            <FrameworkElement.Style>
+              <Style TargetType="{x:Type Image}">
+                <Setter Property="Source" Value="images/status-onair-off@2x.png" />
+              </Style>
+            </FrameworkElement.Style>
+          </Image>
+          <Image Name="screenBroadcasting" Visibility="Collapsed" Panel.ZIndex="10" SnapsToDevicePixels="True" Width="80" Height="80" HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="1">
+            <FrameworkElement.Style>
+              <Style TargetType="{x:Type Image}">
+                <Setter Property="Source" Value="images/status-onair-chairman@2x.png" />
+              </Style>
+            </FrameworkElement.Style>
+          </Image>
+          <Image Name="screenReceiving" Visibility="Collapsed" Panel.ZIndex="10" SnapsToDevicePixels="True" Width="80" Height="80" HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="1">
+            <FrameworkElement.Style>
+              <Style TargetType="{x:Type Image}">
+                <Setter Property="Source" Value="images/status-onair-audience@2x.png" />
+              </Style>
+            </FrameworkElement.Style>
+          </Image>
+        </StackPanel>
+        <Canvas Name="syncCanvas" ZIndex="200" Visibility="Collapsed" Background="#00FFFFFF" Width="{Binding ElementName=PART_ContentHost, Path=ActualWidth}" Height="{Binding ElementName=PART_ContentHost, Path=ActualHeight}" />
+        <RadioButton Name="ShowListBoxButton" Panel.ZIndex="99" GroupName="ShowListBoxMode" HorizontalAlignment="Left" Margin="15, 0, 0, 15" VerticalAlignment="Bottom" ToolTip="{Binding showThumbnails, Source={StaticResource Resources}}" Click="ShowListBoxButton_Click">
+          <ContentControl.Content>
+            <Image Width="24" Height="24" Source="images/ReadWindow/btn_14.png" SnapsToDevicePixels="True" />
+          </ContentControl.Content>
+        </RadioButton>
+        <RadioButton Name="ShowListBoxButtonNew" Panel.ZIndex="99" Margin="0" Visibility="Collapsed" GroupName="ShowListBoxMode" HorizontalAlignment="Left" VerticalAlignment="Bottom" ToolTip="{Binding showThumbnails, Source={StaticResource Resources}}">
+          <ContentControl.Content>
+            <Image Width="58" Height="58" Source="images/tool-viewThumb@2x.png" SnapsToDevicePixels="True" />
+          </ContentControl.Content>
+        </RadioButton>
+        <Grid Name="NewUITop" Opacity=".9" Visibility="Collapsed" ZIndex="201" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+          <StackPanel Name="btnFuncSP" Height="0" Margin="128,0,0,64" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            <Grid>
+              <Polygon Points="0,0 64,0 64,192 40,192 32,200 24,192 0,192" StrokeThickness="2" Stroke="#FFFFFFFF" Fill="#FF000000" />
+              <StackPanel Name="btnBoldSP" Width="64" Height="192" Background="#00FFFFFF" Margin="0,-8,0,0" MouseLeave="btnBoldSP_MouseLeave">
+                <Grid Name="btnThin" Width="62" Height="64" Margin="0" Background="#00FFFFFF" MouseEnter="Grid_MouseEnterTransparent" MouseLeave="Grid_MouseLeaveTransparent">
+                  <RadioButton Tag="100" Click="btnThickness_Click">
+                    <ContentControl.Content>
+                      <Image Width="58" Height="58" Source="images/markers-size-thin@2x.png" />
+                    </ContentControl.Content>
+                  </RadioButton>
+                </Grid>
+                <Grid Name="btnMedium" Width="62" Height="64" Margin="0" Background="#00FFFFFF" MouseEnter="Grid_MouseEnterTransparent" MouseLeave="Grid_MouseLeaveTransparent">
+                  <RadioButton Tag="200" Click="btnThickness_Click">
+                    <ContentControl.Content>
+                      <Image Width="58" Height="58" Source="images/markers-size-medium@2x.png" />
+                    </ContentControl.Content>
+                  </RadioButton>
+                </Grid>
+                <Grid Name="btnLarge" Width="62" Height="64" Margin="0" Background="#00FFFFFF" MouseEnter="Grid_MouseEnterTransparent" MouseLeave="Grid_MouseLeaveTransparent">
+                  <RadioButton Tag="300" Click="btnThickness_Click">
+                    <ContentControl.Content>
+                      <Image Width="58" Height="58" Source="images/markers-size-bold@2x.png" />
+                    </ContentControl.Content>
+                  </RadioButton>
+                </Grid>
+              </StackPanel>
+            </Grid>
+          </StackPanel>
+          <StackPanel Name="btnPenFuncSP" Height="0" Margin="32,0,0,64" HorizontalAlignment="Left" VerticalAlignment="Bottom" MouseLeave="btnPenFuncSP_MouseLeave">
+            <Grid>
+              <Polygon Points="0,0 136,0 136,310 80,310 68,318 56,310 0,310" StrokeThickness="2" Stroke="#FFFFFFFF" Fill="#00FFFFFF" />
+              <StackPanel Name="PenColorSP" VerticalAlignment="Center" Margin="4,0,0,8">
+                <StackPanel Orientation="Horizontal">
+                  <Grid Background="#FF000000" Margin="1" MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave">
+                    <RadioButton Tag="1" Click="btnPenColor_Click">
+                      <ContentControl.Content>
+                        <Image Width="56" Height="56" Source="images/markers-color-red@2x.png" />
+                      </ContentControl.Content>
+                    </RadioButton>
+                  </Grid>
+                  <Grid Background="#FF000000" Margin="1" MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave">
+                    <RadioButton Tag="2" Click="btnPenColor_Click">
+                      <ContentControl.Content>
+                        <Image Width="56" Height="56" Source="images/markers-color-red50@2x.png" />
+                      </ContentControl.Content>
+                    </RadioButton>
+                  </Grid>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                  <Grid Background="#FF000000" Margin="1" MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave">
+                    <RadioButton Tag="3" Click="btnPenColor_Click">
+                      <ContentControl.Content>
+                        <Image Width="56" Height="56" Source="images/markers-color-yellow@2x.png" />
+                      </ContentControl.Content>
+                    </RadioButton>
+                  </Grid>
+                  <Grid Background="#FF000000" Margin="1" MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave">
+                    <RadioButton Tag="4" Click="btnPenColor_Click">
+                      <ContentControl.Content>
+                        <Image Width="56" Height="56" Source="images/markers-color-yellow50@2x.png" />
+                      </ContentControl.Content>
+                    </RadioButton>
+                  </Grid>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                  <Grid Background="#FF000000" Margin="1" MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave">
+                    <RadioButton Tag="5" Click="btnPenColor_Click">
+                      <ContentControl.Content>
+                        <Image Width="56" Height="56" Source="images/markers-color-green@2x.png" />
+                      </ContentControl.Content>
+                    </RadioButton>
+                  </Grid>
+                  <Grid Background="#FF000000" Margin="1" MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave">
+                    <RadioButton Tag="6" Click="btnPenColor_Click">
+                      <ContentControl.Content>
+                        <Image Width="56" Height="56" Source="images/markers-color-green50@2x.png" />
+                      </ContentControl.Content>
+                    </RadioButton>
+                  </Grid>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                  <Grid Background="#FF000000" Margin="1" MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave">
+                    <RadioButton Tag="7" Click="btnPenColor_Click">
+                      <ContentControl.Content>
+                        <Image Width="56" Height="56" Source="images/markers-color-blue@2x.png" />
+                      </ContentControl.Content>
+                    </RadioButton>
+                  </Grid>
+                  <Grid Background="#FF000000" Margin="1" MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave">
+                    <RadioButton Tag="8" Click="btnPenColor_Click">
+                      <ContentControl.Content>
+                        <Image Width="56" Height="56" Source="images/markers-color-blue50@2x.png" />
+                      </ContentControl.Content>
+                    </RadioButton>
+                  </Grid>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                  <Grid Background="#FF000000" Margin="1" MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave">
+                    <RadioButton Tag="9" Click="btnPenColor_Click">
+                      <ContentControl.Content>
+                        <Image Width="56" Height="56" Source="images/markers-color-purple@2x.png" />
+                      </ContentControl.Content>
+                    </RadioButton>
+                  </Grid>
+                  <Grid Background="#FF000000" Margin="1" MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave">
+                    <RadioButton Tag="10" Click="btnPenColor_Click">
+                      <ContentControl.Content>
+                        <Image Width="56" Height="56" Source="images/markers-color-purple50@2x.png" />
+                      </ContentControl.Content>
+                    </RadioButton>
+                  </Grid>
+                </StackPanel>
+              </StackPanel>
+            </Grid>
+          </StackPanel>
+        </Grid>
+        <Grid Name="NewUI" Visibility="Collapsed" ZIndex="202" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+          <StackPanel Background="#FFFFFFFF" Opacity=".9" Height="60" Orientation="Horizontal">
+            <Grid Width="64" Height="64">
+              <RadioButton Name="btnPen" Tag="201" Click="btnPen_Click">
+                <ContentControl.Content>
+                  <Image Width="58" Height="58" Source="images/markersNow-red-medium@2x.png" />
+                </ContentControl.Content>
+              </RadioButton>
+              <Image Name="PenSlideCtrl" Width="8" Height="16" Margin="0,0,3,0" VerticalAlignment="Center" HorizontalAlignment="Right" Source="images/slideCtrl-open@2x.png" />
+            </Grid>
+            <StackPanel Name="PenSP" Height="64" Background="#FF000000" Width="0" Orientation="Horizontal">
+              <StackPanel>
+                <Grid Width="64" Height="64">
+                  <RadioButton Name="btnPenColor" Tag="1">
+                    <ContentControl.Content>
+                      <Image Width="58" Height="58" Source="images/markers-color-red@2x.png" />
+                    </ContentControl.Content>
+                  </RadioButton>
+                  <Image Width="8" Height="16" Margin="0,4,4,0" VerticalAlignment="Top" HorizontalAlignment="Right" Source="images/more@2x.png" />
+                </Grid>
+              </StackPanel>
+              <Rectangle Width="1" Height="64" Fill="#FFFFFFFF" />
+              <StackPanel>
+                <Grid Width="64" Height="64">
+                  <RadioButton Name="btnBold" Tag="200">
+                    <ContentControl.Content>
+                      <Image Width="58" Height="58" Source="images/markers-size-medium@2x.png" />
+                    </ContentControl.Content>
+                  </RadioButton>
+                  <Image Width="8" Height="16" Margin="0,4,4,0" VerticalAlignment="Top" HorizontalAlignment="Right" Source="images/more@2x.png" />
+                </Grid>
+              </StackPanel>
+              <Rectangle Width="1" Height="64" Fill="#FFFFFFFF" />
+              <StackPanel>
+                <Grid Name="btnEraserGD" Width="64" Height="64" Background="#00FFFFFF">
+                  <RadioButton Name="btnEraser" Click="btnEraser_Click">
+                    <ContentControl.Content>
+                      <Image Width="58" Height="58" Source="images/markers-eraser@2x.png" />
+                    </ContentControl.Content>
+                  </RadioButton>
+                </Grid>
+              </StackPanel>
+            </StackPanel>
+            <Grid Width="64" Height="64">
+              <RadioButton Click="btnSetting_Click">
+                <ContentControl.Content>
+                  <Image Width="58" Height="58" Source="images/tools@2x.png" />
+                </ContentControl.Content>
+              </RadioButton>
+              <Image Name="SettingSlideCtrl" Width="8" Height="16" Margin="0,0,3,0" VerticalAlignment="Center" HorizontalAlignment="Right" Source="images/slideCtrl-open@2x.png" />
+            </Grid>
+            <StackPanel Name="SettingSP" Background="#FF000000" Width="0" Orientation="Horizontal">
+              <StackPanel Name="BookMarkSP">
+                <Grid Width="61" Height="64">
+                  <RadioButton Name="btnBookMark" Click="BookMarkButton_Checked">
+                    <ContentControl.Content>
+                      <Image Width="58" Height="58" Source="images/tool-bookmark@2x.png" />
+                    </ContentControl.Content>
+                  </RadioButton>
+                </Grid>
+              </StackPanel>
+              <Rectangle Width="1" Height="64" Fill="#FFFFFFFF" />
+              <StackPanel Name="MemoSP">
+                <Grid Width="64" Height="64">
+                  <RadioButton Name="btnNoteButton" Click="NoteButton_Checked">
+                    <ContentControl.Content>
+                      <Image Width="58" Height="58" Source="images/tool-memo@2x.png" />
+                    </ContentControl.Content>
+                  </RadioButton>
+                </Grid>
+              </StackPanel>
+              <Rectangle Width="1" Height="64" Fill="#FFFFFFFF" />
+              <StackPanel Name="SentMailSP">
+                <Grid Width="64" Height="64">
+                  <RadioButton Click="ShareButton_Checked">
+                    <ContentControl.Content>
+                      <Image Width="58" Height="58" Source="images/tool-mailmemo@2x.png" />
+                    </ContentControl.Content>
+                  </RadioButton>
+                </Grid>
+              </StackPanel>
+              <Rectangle Width="1" Height="64" Fill="#FFFFFFFF" />
+              <StackPanel>
+                <Grid Width="64" Height="64">
+                  <RadioButton>
+                    <ContentControl.Content>
+                      <Image Width="58" Height="58" Source="images/tool-note@2x.png" />
+                    </ContentControl.Content>
+                  </RadioButton>
+                </Grid>
+              </StackPanel>
+              <Rectangle Width="1" Height="64" Fill="#FFFFFFFF" />
+              <StackPanel Name="ViewThumbSP">
+                <Grid Width="64" Height="64">
+                  <RadioButton Name="btnViewThumb" Click="ShowListBoxButtonNew_Click">
+                    <ContentControl.Content>
+                      <Image Width="58" Height="58" Source="images/tool-viewThumb@2x.png" />
+                    </ContentControl.Content>
+                  </RadioButton>
+                </Grid>
+              </StackPanel>
+            </StackPanel>
+            <Grid Width="64" Height="64">
+              <RadioButton Click="BackToBookShelfButton_Click">
+                <ContentControl.Content>
+                  <Image Name="btnClose" Width="58" Height="58" Source="images/exitReader@2x.png" />
+                </ContentControl.Content>
+              </RadioButton>
+            </Grid>
+          </StackPanel>
+        </Grid>
+        <Canvas Name="thumnailCanvas" Visibility="Collapsed" Opacity="0.9" VerticalAlignment="Bottom" Height="150" ZIndex="200" Grid.Column="0" Background="#454545" TextElement.FontSize="12" TextElement.FontWeight="Bold" TextElement.Foreground="#bcbcbc" TextElement.FontFamily="新細明體">
+          <StackPanel Orientation="Vertical">
+            <StackPanel Name="SearchSP" Visibility="Collapsed" Orientation="Horizontal" Background="#202020" VerticalAlignment="Center">
+              <StackPanel Background="#151515" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <Image Source="Images/thumb-search@2x.png" Width="20" Height="20" Margin="5" />
+                <Grid Margin="5">
+                  <TextBox Name="txtKeyword" TextAlignment="Left" CaretBrush="#FFFFFFFF" Background="#00FFFFFF" Foreground="#FFFFFFFF" BorderThickness="0" FontSize="16" Width="265" Height="25" Margin="0,3,23,0" />
+                  <RadioButton Name="btnTxtKeywordClear" Visibility="Collapsed" HorizontalAlignment="Right">
+                    <ContentControl.Content>
+                      <Image Source="images/thumb-search-clear@2x.png" Width="20" Height="20" />
+                    </ContentControl.Content>
+                  </RadioButton>
+                </Grid>
+              </StackPanel>
+              <TextBlock Name="txtFilterCount" Margin="5,5,5,5" Foreground="#FFFFFFFF" VerticalAlignment="Center" Background="#00FFFFFF" FontSize="16" />
+            </StackPanel>
+            <StackPanel Name="thumbNailCanvasStackPanel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Height="150">
+              <Grid Name="thumbNailCanvasGrid" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0">
+                <StackPanel Name="RadioButtonStackPanel" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0">
+                  <RadioButton Name="AllImageButtonInListBox" GroupName="ListBoxGroup" Margin="0, 5,0,0" IsChecked="True" ToolTip="{Binding showAllThumbnails, Source={StaticResource Resources}}" Click="AllImageButtonInListBox_Checked">
+                    <ContentControl.Content>
+                      <Image Width="24" Height="24" SnapsToDevicePixels="True">
+                        <FrameworkElement.Style>
+                          <Style TargetType="{x:Type Image}">
+                            <Setter Property="Source" Value="images/ReadWindow/btn_full_over.png" />
+                            <Style.Triggers>
+                              <DataTrigger Value="False" Binding="{Binding ElementName=AllImageButtonInListBox, Path=IsChecked}">
+                                <Setter Property="Source" Value="images/ReadWindow/btn_full.png" />
+                              </DataTrigger>
+                            </Style.Triggers>
+                          </Style>
+                        </FrameworkElement.Style>
+                      </Image>
+                    </ContentControl.Content>
+                  </RadioButton>
+                  <StackPanel Name="AllImageButtonInListBoxSP" Height="50" Visibility="Collapsed" Orientation="Horizontal" MouseLeftButtonDown="AllImageButtonInListBoxSP_MouseLeftButtonDown">
+                    <RadioButton Name="AllImageButtonInListBoxNew" GroupName="ListBoxGroup" Margin="0,3,0,0" IsChecked="False" ToolTip="{Binding showAnnotation, Source={StaticResource Resources}}" Click="AllImageButtonInListBox_Checked">
+                      <ContentControl.Content>
+                        <Image Width="32" Height="32" SnapsToDevicePixels="True">
+                          <FrameworkElement.Style>
+                            <Style TargetType="{x:Type Image}">
+                              <Setter Property="Stretch" Value="Uniform" />
+                              <Setter Property="Source" Value="images/tool-viewThumb@2x.png" />
+                              <Style.Triggers>
+                                <DataTrigger Value="True" Binding="{Binding ElementName=AllImageButtonInListBoxNew, Path=IsChecked}">
+                                  <Setter Property="Source" Value="images/tool-viewThumb@2x.png" />
+                                </DataTrigger>
+                              </Style.Triggers>
+                            </Style>
+                          </FrameworkElement.Style>
+                        </Image>
+                      </ContentControl.Content>
+                    </RadioButton>
+                    <TextBlock Text="全部" FontSize="16" Foreground="#FFFFFFFF" Margin="0,15,3,0" FontFamily="新細明體" />
+                  </StackPanel>
+                  <RadioButton Name="BookMarkButtonInListBox" GroupName="ListBoxGroup" Margin="0, 5,0,0" IsChecked="False" ToolTip="{Binding showBookmarks, Source={StaticResource Resources}}" Click="BookMarkButtonInListBox_Checked">
+                    <ContentControl.Content>
+                      <Image Width="24" Height="24" SnapsToDevicePixels="True">
+                        <FrameworkElement.Style>
+                          <Style TargetType="{x:Type Image}">
+                            <Setter Property="Source" Value="images/ReadWindow/btn_bookmark.png" />
+                            <Style.Triggers>
+                              <DataTrigger Value="True" Binding="{Binding ElementName=BookMarkButtonInListBox, Path=IsChecked}">
+                                <Setter Property="Source" Value="images/ReadWindow/btn_bookmark_over.png" />
+                              </DataTrigger>
+                            </Style.Triggers>
+                          </Style>
+                        </FrameworkElement.Style>
+                      </Image>
+                    </ContentControl.Content>
+                  </RadioButton>
+                  <Rectangle Name="Rect1" Visibility="Collapsed" Margin="0" Height="1" Fill="#FFFFFFFF" />
+                  <StackPanel Name="BookMarkButtonInListBoxSP" Height="50" Visibility="Collapsed" Orientation="Horizontal" MouseLeftButtonDown="BookMarkButtonInListBoxSP_MouseLeftButtonDown">
+                    <RadioButton Name="BookMarkButtonInListBoxNew" GroupName="ListBoxGroup" Margin="0,3,0,0" IsChecked="False" ToolTip="{Binding showAnnotation, Source={StaticResource Resources}}" Click="BookMarkButtonInListBox_Checked">
+                      <ContentControl.Content>
+                        <Image Width="32" Height="32" SnapsToDevicePixels="True">
+                          <FrameworkElement.Style>
+                            <Style TargetType="{x:Type Image}">
+                              <Setter Property="Stretch" Value="Uniform" />
+                              <Setter Property="Source" Value="images/tool-bookmark@2x.png" />
+                              <Style.Triggers>
+                                <DataTrigger Value="True" Binding="{Binding ElementName=BookMarkButtonInListBoxNew, Path=IsChecked}">
+                                  <Setter Property="Source" Value="images/tool-bookmark@2x.png" />
+                                </DataTrigger>
+                              </Style.Triggers>
+                            </Style>
+                          </FrameworkElement.Style>
+                        </Image>
+                      </ContentControl.Content>
+                    </RadioButton>
+                    <TextBlock Text="有書籤" FontSize="16" Foreground="#FFFFFFFF" Margin="0,15,3,0" FontFamily="新細明體" />
+                  </StackPanel>
+                  <RadioButton Name="NoteButtonInListBox" GroupName="ListBoxGroup" Margin="0, 5,0,0" IsChecked="False" ToolTip="{Binding showAnnotation, Source={StaticResource Resources}}" Click="NoteButtonInListBox_Checked">
+                    <ContentControl.Content>
+                      <Image Width="24" Height="24" SnapsToDevicePixels="True">
+                        <FrameworkElement.Style>
+                          <Style TargetType="{x:Type Image}">
+                            <Setter Property="Source" Value="images/ReadWindow/btn_note.png" />
+                            <Style.Triggers>
+                              <DataTrigger Value="True" Binding="{Binding ElementName=NoteButtonInListBox, Path=IsChecked}">
+                                <Setter Property="Source" Value="images/ReadWindow/btn_note_over.png" />
+                              </DataTrigger>
+                            </Style.Triggers>
+                          </Style>
+                        </FrameworkElement.Style>
+                      </Image>
+                    </ContentControl.Content>
+                  </RadioButton>
+                  <Rectangle Name="Rect2" Visibility="Collapsed" Margin="0" Height="1" Fill="#FFFFFFFF" />
+                  <StackPanel Name="NoteButtonInListBoxSP" Height="50" Visibility="Collapsed" Orientation="Horizontal" MouseLeftButtonDown="NoteButtonInListBoxSP_MouseLeftButtonDown">
+                    <RadioButton Name="NoteButtonInListBoxNew" GroupName="ListBoxGroup" Margin="0,3,0,0" IsChecked="False" ToolTip="{Binding showAnnotation, Source={StaticResource Resources}}" Click="NoteButtonInListBox_Checked">
+                      <ContentControl.Content>
+                        <Image Width="32" Height="32" SnapsToDevicePixels="True">
+                          <FrameworkElement.Style>
+                            <Style TargetType="{x:Type Image}">
+                              <Setter Property="Stretch" Value="Uniform" />
+                              <Setter Property="Source" Value="images/tool-memo@2x.png" />
+                              <Style.Triggers>
+                                <DataTrigger Value="True" Binding="{Binding ElementName=NoteButtonInListBoxNew, Path=IsChecked}">
+                                  <Setter Property="Source" Value="images/tool-memo@2x.png" />
+                                </DataTrigger>
+                              </Style.Triggers>
+                            </Style>
+                          </FrameworkElement.Style>
+                        </Image>
+                      </ContentControl.Content>
+                    </RadioButton>
+                    <TextBlock Text="有便利貼" FontSize="16" Foreground="#FFFFFFFF" Margin="0,15,3,0" FontFamily="新細明體" />
+                  </StackPanel>
+                  <RadioButton Name="HideListBoxButton" GroupName="ListBoxGroup" Margin="0, 5,0,0" ToolTip="{Binding hideThumbnails, Source={StaticResource Resources}}" Click="HideListBoxButton_Click">
+                    <ContentControl.Content>
+                      <Image Width="24" Height="24" SnapsToDevicePixels="True">
+                        <FrameworkElement.Style>
+                          <Style TargetType="{x:Type Image}">
+                            <Setter Property="Source" Value="images/ReadWindow/btn_hide.png" />
+                            <Style.Triggers>
+                              <DataTrigger Value="關閉縮圖總覽" Binding="{Binding ElementName=HideListBoxButton, Path=ToolTip}">
+                                <Setter Property="Source" Value="images/ReadWindow/btn_close.png" />
+                              </DataTrigger>
+                            </Style.Triggers>
+                          </Style>
+                        </FrameworkElement.Style>
+                      </Image>
+                    </ContentControl.Content>
+                  </RadioButton>
+                </StackPanel>
+              </Grid>
+              <Grid Name="thumbNailListBoxGD">
+                <ListBox Name="thumbNailListBox" ScrollViewer.IsDeferredScrollingEnabled="False" VirtualizingStackPanel.VirtualizationMode="Recycling" VirtualizingStackPanel.IsVirtualizing="True" Height="150" Style="{DynamicResource ListBoxStyle}" SelectionChanged="thumbNailListBox_SelectionChanged">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                </ListBox>
+              </Grid>
+            </StackPanel>
+          </StackPanel>
+        </Canvas>
+      </Grid>
+    </DockPanel>
+    <Grid Name="webViewGrid" />
+  </Grid>
+</Window>

@@ -1,0 +1,428 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="ReadPageModule.AudioPlayer" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" Height="100" Width="358" Title="AudioPlayer" Icon="Assets/64x64.ico" xmlns:readpagemodule="clr-namespace:ReadPageModule;assembly=ReadPageModule">
+  <FrameworkElement.Resources>
+    <ResourceDictionary>
+      <Style x:Key="progSlider" TargetType="{x:Type Slider}">
+        <Setter Property="Stylus.IsPressAndHoldEnabled" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="FrameworkElement.OverridesDefaultStyle" Value="True" />
+        <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="#00000000" />
+        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}" />
+        <Setter Property="Slider.IsSnapToTickEnabled" Value="True" />
+        <Setter Property="UIElement.RenderTransformOrigin" Value="0.5,0.5" />
+        <Setter Property="MinWidth" Value="50" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="Width" Value="Auto" />
+        <Setter Property="Padding" Value="2,0" />
+        <Setter Property="Height" Value="Auto" />
+        <Setter Property="UIElement.Opacity" Value="0.75" />
+        <Setter Property="Slider.Delay" Value="1000" />
+        <Setter Property="Slider.Interval" Value="250" />
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="{x:Type Slider}">
+              <Border Background="#00FFFFFF" Padding="{TemplateBinding Padding}" Uid="Border_45">
+                <Grid ClipToBounds="False" Uid="Grid_22">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                  </Grid.RowDefinitions>
+                  <TickBar Name="TopTick" Fill="{TemplateBinding Foreground}" Height="4" Placement="Top" Grid.Row="0" Uid="TickBar_1" Visibility="Collapsed" />
+                  <Border Background="#b1afb0" BorderBrush="#928c81" BorderThickness="1" Height="10" Grid.Row="1" />
+                  <Canvas Height="4" Grid.Row="1" Uid="Canvas_7" VerticalAlignment="Center">
+                    <Rectangle Name="PART_SelectionRange" Fill="{TemplateBinding Foreground}" Height="2" Canvas.Top="1" Uid="Rectangle_17" Visibility="Hidden" />
+                  </Canvas>
+                  <Track Name="PART_Track" Grid.Row="1" Uid="PART_Track">
+                    <Track.DecreaseRepeatButton>
+                      <RepeatButton Command="Slider.DecreaseLarge" Uid="RepeatButton_1">
+                        <FrameworkElement.Style>
+                          <Style TargetType="{x:Type RepeatButton}">
+                            <Setter Property="FrameworkElement.OverridesDefaultStyle" Value="True" />
+                            <Setter Property="IsTabStop" Value="False" />
+                            <Setter Property="Focusable" Value="False" />
+                            <Setter Property="Height" Value="10" />
+                            <Setter Property="Template">
+                              <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                                  <Border Background="#df6c1c" />
+                                </ControlTemplate>
+                              </Setter.Value>
+                            </Setter>
+                          </Style>
+                        </FrameworkElement.Style>
+                      </RepeatButton>
+                    </Track.DecreaseRepeatButton>
+                    <Track.IncreaseRepeatButton>
+                      <RepeatButton Command="Slider.IncreaseLarge" Uid="RepeatButton_2">
+                        <FrameworkElement.Style>
+                          <Style TargetType="{x:Type RepeatButton}">
+                            <Setter Property="FrameworkElement.OverridesDefaultStyle" Value="True" />
+                            <Setter Property="IsTabStop" Value="False" />
+                            <Setter Property="Focusable" Value="False" />
+                            <Setter Property="Height" Value="10" />
+                            <Setter Property="Template">
+                              <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                                  <Border Background="#00FFFFFF" Uid="Border_43" />
+                                </ControlTemplate>
+                              </Setter.Value>
+                            </Setter>
+                          </Style>
+                        </FrameworkElement.Style>
+                      </RepeatButton>
+                    </Track.IncreaseRepeatButton>
+                    <Track.Thumb>
+                      <Thumb Background="{TemplateBinding Background}" Uid="Thumb_5">
+                        <FrameworkElement.Style>
+                          <Style TargetType="{x:Type Thumb}">
+                            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <Setter Property="Focusable" Value="False" />
+                            <Setter Property="FrameworkElement.OverridesDefaultStyle" Value="True" />
+                            <Setter Property="FrameworkElement.Cursor" Value="Hand" />
+                            <Setter Property="Padding" Value="6" />
+                            <Setter Property="Template">
+                              <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Thumb}">
+                                  <Border Background="#00FFFFFF" Margin="2" Uid="Border_44" Padding="{Binding Padding, RelativeSource={RelativeSource TemplatedParent}}">
+                                    <Image Width="35" Height="33" Margin="-15, -5, -20,-10" SnapsToDevicePixels="True">
+                                      <FrameworkElement.Style>
+                                        <Style TargetType="{x:Type Image}">
+                                          <Setter Property="Source" Value="Assets/ReadWindow/video_bar.png" />
+                                        </Style>
+                                      </FrameworkElement.Style>
+                                    </Image>
+                                  </Border>
+                                  <ControlTemplate.Triggers>
+                                    <Trigger Property="UIElement.IsMouseOver" Value="True">
+                                      <Setter Property="RenderTransform">
+                                        <Setter.Value>
+                                          <ScaleTransform ScaleY="1.05" ScaleX="1.05" />
+                                        </Setter.Value>
+                                      </Setter>
+                                    </Trigger>
+                                  </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                              </Setter.Value>
+                            </Setter>
+                          </Style>
+                        </FrameworkElement.Style>
+                      </Thumb>
+                    </Track.Thumb>
+                  </Track>
+                  <TickBar Name="BottomTick" Fill="{TemplateBinding Foreground}" Height="4" Placement="Bottom" Grid.Row="2" Uid="TickBar_2" Visibility="Collapsed" />
+                </Grid>
+              </Border>
+              <ControlTemplate.Triggers>
+                <Trigger Property="Slider.TickPlacement" Value="TopLeft">
+                  <Setter TargetName="TopTick" Property="Visibility" Value="Visible" />
+                </Trigger>
+                <Trigger Property="Slider.TickPlacement" Value="BottomRight">
+                  <Setter TargetName="BottomTick" Property="Visibility" Value="Visible" />
+                </Trigger>
+                <Trigger Property="Slider.TickPlacement" Value="Both">
+                  <Setter TargetName="TopTick" Property="Visibility" Value="Visible" />
+                  <Setter TargetName="BottomTick" Property="Visibility" Value="Visible" />
+                </Trigger>
+                <Trigger Property="Slider.IsSelectionRangeEnabled" Value="True">
+                  <Setter TargetName="PART_SelectionRange" Property="Visibility" Value="Visible" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                  <Setter Property="UIElement.Opacity" Value="0.3" />
+                </Trigger>
+              </ControlTemplate.Triggers>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+      </Style>
+      <Style x:Key="volumnSlider" TargetType="{x:Type Slider}" BasedOn="{StaticResource progSlider}">
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="{x:Type Slider}">
+              <Border Background="#00FFFFFF" Padding="{TemplateBinding Padding}" Uid="Border_45">
+                <Grid ClipToBounds="False" Uid="Grid_22">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                  </Grid.RowDefinitions>
+                  <TickBar Name="TopTick" Fill="{TemplateBinding Foreground}" Height="4" Placement="Top" Grid.Row="0" Uid="TickBar_1" Visibility="Collapsed" />
+                  <Border Background="#b1afb0" BorderBrush="#928c81" BorderThickness="1" Height="10" Grid.Row="1" />
+                  <Canvas Height="4" Grid.Row="1" Uid="Canvas_7" VerticalAlignment="Center">
+                    <Rectangle Name="PART_SelectionRange" Fill="{TemplateBinding Foreground}" Height="2" Canvas.Top="1" Uid="Rectangle_17" Visibility="Hidden" />
+                  </Canvas>
+                  <Track Name="PART_Track" Grid.Row="1" Uid="PART_Track">
+                    <Track.DecreaseRepeatButton>
+                      <RepeatButton Command="Slider.DecreaseLarge" Uid="RepeatButton_1">
+                        <FrameworkElement.Style>
+                          <Style TargetType="{x:Type RepeatButton}">
+                            <Setter Property="FrameworkElement.OverridesDefaultStyle" Value="True" />
+                            <Setter Property="IsTabStop" Value="False" />
+                            <Setter Property="Focusable" Value="False" />
+                            <Setter Property="Height" Value="10" />
+                            <Setter Property="Template">
+                              <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                                  <Border Background="#df6c1c" />
+                                </ControlTemplate>
+                              </Setter.Value>
+                            </Setter>
+                          </Style>
+                        </FrameworkElement.Style>
+                      </RepeatButton>
+                    </Track.DecreaseRepeatButton>
+                    <Track.IncreaseRepeatButton>
+                      <RepeatButton Command="Slider.IncreaseLarge" Uid="RepeatButton_2">
+                        <FrameworkElement.Style>
+                          <Style TargetType="{x:Type RepeatButton}">
+                            <Setter Property="FrameworkElement.OverridesDefaultStyle" Value="True" />
+                            <Setter Property="IsTabStop" Value="False" />
+                            <Setter Property="Focusable" Value="False" />
+                            <Setter Property="Height" Value="10" />
+                            <Setter Property="Template">
+                              <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                                  <Border Background="#b1b0ae" Uid="Border_43" />
+                                </ControlTemplate>
+                              </Setter.Value>
+                            </Setter>
+                          </Style>
+                        </FrameworkElement.Style>
+                      </RepeatButton>
+                    </Track.IncreaseRepeatButton>
+                    <Track.Thumb>
+                      <Thumb Background="{TemplateBinding Background}" Uid="Thumb_5">
+                        <FrameworkElement.Style>
+                          <Style TargetType="{x:Type Thumb}">
+                            <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <Setter Property="Focusable" Value="False" />
+                            <Setter Property="FrameworkElement.OverridesDefaultStyle" Value="True" />
+                            <Setter Property="FrameworkElement.Cursor" Value="Hand" />
+                            <Setter Property="Padding" Value="6" />
+                            <Setter Property="Template">
+                              <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Thumb}">
+                                  <Border Background="#00FFFFFF" Margin="-2" Uid="Border_44" Padding="{Binding Padding, RelativeSource={RelativeSource TemplatedParent}}">
+                                    <Image Width="35" Height="33" Margin="-20,2,0,0" SnapsToDevicePixels="True">
+                                      <FrameworkElement.Style>
+                                        <Style TargetType="{x:Type Image}">
+                                          <Setter Property="Source" Value="Assets/ReadWindow/sound_bar.png" />
+                                        </Style>
+                                      </FrameworkElement.Style>
+                                    </Image>
+                                  </Border>
+                                  <ControlTemplate.Triggers>
+                                    <Trigger Property="UIElement.IsMouseOver" Value="True">
+                                      <Setter Property="RenderTransform">
+                                        <Setter.Value>
+                                          <ScaleTransform ScaleY="1.05" ScaleX="1.05" />
+                                        </Setter.Value>
+                                      </Setter>
+                                    </Trigger>
+                                  </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                              </Setter.Value>
+                            </Setter>
+                          </Style>
+                        </FrameworkElement.Style>
+                      </Thumb>
+                    </Track.Thumb>
+                  </Track>
+                  <TickBar Name="BottomTick" Fill="{TemplateBinding Foreground}" Height="4" Placement="Bottom" Grid.Row="2" Uid="TickBar_2" Visibility="Collapsed" />
+                </Grid>
+              </Border>
+              <ControlTemplate.Triggers>
+                <Trigger Property="Slider.TickPlacement" Value="TopLeft">
+                  <Setter TargetName="TopTick" Property="Visibility" Value="Visible" />
+                </Trigger>
+                <Trigger Property="Slider.TickPlacement" Value="BottomRight">
+                  <Setter TargetName="BottomTick" Property="Visibility" Value="Visible" />
+                </Trigger>
+                <Trigger Property="Slider.TickPlacement" Value="Both">
+                  <Setter TargetName="TopTick" Property="Visibility" Value="Visible" />
+                  <Setter TargetName="BottomTick" Property="Visibility" Value="Visible" />
+                </Trigger>
+                <Trigger Property="Slider.IsSelectionRangeEnabled" Value="True">
+                  <Setter TargetName="PART_SelectionRange" Property="Visibility" Value="Visible" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                  <Setter Property="UIElement.Opacity" Value="0.3" />
+                </Trigger>
+              </ControlTemplate.Triggers>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+      </Style>
+      <Style x:Key="ButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Margin" Value="1" />
+        <Style.BasedOn>
+          <Style TargetType="{x:Type ButtonBase}">
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="UIElement.Opacity" Value="1" />
+            <Setter Property="FrameworkElement.Cursor" Value="Hand" />
+            <Setter Property="Background" Value="#00FFFFFF" />
+            <Setter Property="Padding" Value="3,1" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Template">
+              <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                  <Border Background="{TemplateBinding Background}" Uid="Border_39">
+                    <ContentPresenter Name="Content" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" RenderTransformOrigin="0.5,0.5" Uid="ContentPresenter_2" />
+                  </Border>
+                  <ControlTemplate.Triggers>
+                    <Trigger Property="IsPressed" Value="True">
+                      <Setter TargetName="Content" Property="RenderTransform">
+                        <Setter.Value>
+                          <ScaleTransform ScaleY="0.9" ScaleX="0.9" />
+                        </Setter.Value>
+                      </Setter>
+                    </Trigger>
+                  </ControlTemplate.Triggers>
+                </ControlTemplate>
+              </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+              <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="UIElement.Opacity" Value="0.3" />
+              </Trigger>
+            </Style.Triggers>
+          </Style>
+        </Style.BasedOn>
+      </Style>
+      <Style x:Key="PauseImageStyle" TargetType="{x:Type Image}">
+        <Setter Property="Width" Value="57" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="UIElement.SnapsToDevicePixels" Value="True" />
+        <Setter Property="Source" Value="Assets/ReadWindow/btn_Pause.png" />
+        <Style.Triggers>
+          <DataTrigger Value="True" Binding="{Binding ElementName=s, Path=IsMouseOver}">
+            <Setter Property="Source" Value="Assets/ReadWindow/btn_Pause_over.png" />
+          </DataTrigger>
+        </Style.Triggers>
+      </Style>
+      <Style x:Key="PlayImageStyle" TargetType="{x:Type Image}" BasedOn="{StaticResource PauseImageStyle}">
+        <Setter Property="Source" Value="Assets/ReadWindow/btn_Play.png" />
+        <Style.Triggers>
+          <DataTrigger Value="True" Binding="{Binding ElementName=s, Path=IsMouseOver}">
+            <Setter Property="Source" Value="Assets/ReadWindow/btn_Play_over.png" />
+          </DataTrigger>
+        </Style.Triggers>
+      </Style>
+    </ResourceDictionary>
+  </FrameworkElement.Resources>
+  <Grid Name="l">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="1" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+    <MediaElement Name="m" Grid.Row="0" LoadedBehavior="Manual" MediaOpened="d" MouseLeftButtonUp="a" />
+    <StackPanel Name="n" Orientation="Vertical" Grid.Row="1">
+      <StackPanel Name="o" HorizontalAlignment="Stretch">
+        <Slider Name="p" Style="{StaticResource progSlider}" Margin="20,0" MaxWidth="588" MaxHeight="40" Thumb.DragStarted="a" Thumb.DragCompleted="a" />
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+        <ToggleButton Name="q" ToolTip="{Binding fileLoop, Source={StaticResource Resources}}" Click="b">
+          <Image Height="24" SnapsToDevicePixels="True">
+            <FrameworkElement.Style>
+              <Style TargetType="{x:Type Image}">
+                <Setter Property="Source" Value="Assets/ReadWindow/btn_02.png" />
+                <Style.Triggers>
+                  <DataTrigger Value="True" Binding="{Binding ElementName=q, Path=IsChecked}">
+                    <Setter Property="Source" Value="Assets/ReadWindow/btn_02_over.png" />
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </FrameworkElement.Style>
+          </Image>
+        </ToggleButton>
+        <ToggleButton Name="r" ToolTip="{Binding bookLoop, Source={StaticResource Resources}}" Click="a">
+          <Image Height="24" SnapsToDevicePixels="True">
+            <FrameworkElement.Style>
+              <Style TargetType="{x:Type Image}">
+                <Setter Property="Source" Value="Assets/ReadWindow/btn_01.png" />
+                <Style.Triggers>
+                  <DataTrigger Value="True" Binding="{Binding ElementName=r, Path=IsChecked}">
+                    <Setter Property="Source" Value="Assets/ReadWindow/btn_01_over.png" />
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </FrameworkElement.Style>
+          </Image>
+        </ToggleButton>
+        <Button Name="s" Style="{StaticResource ButtonStyle}" Click="j">
+          <ContentControl.Content>
+            <Image Name="t" Style="{StaticResource PauseImageStyle}" />
+          </ContentControl.Content>
+        </Button>
+        <Button Name="u" Style="{StaticResource ButtonStyle}" Click="i">
+          <ContentControl.Content>
+            <Image Width="57" Height="24" SnapsToDevicePixels="True">
+              <FrameworkElement.Style>
+                <Style TargetType="{x:Type Image}">
+                  <Setter Property="Source" Value="Assets/ReadWindow/btn_Stop.png" />
+                  <Style.Triggers>
+                    <DataTrigger Value="True" Binding="{Binding ElementName=u, Path=IsMouseOver}">
+                      <Setter Property="Source" Value="Assets/ReadWindow/btn_Stop_over.png" />
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </FrameworkElement.Style>
+            </Image>
+          </ContentControl.Content>
+        </Button>
+        <Button Name="v" Style="{StaticResource ButtonStyle}" Click="g">
+          <ContentControl.Content>
+            <Image Width="57" Height="24" SnapsToDevicePixels="True">
+              <FrameworkElement.Style>
+                <Style TargetType="{x:Type Image}">
+                  <Setter Property="Source" Value="Assets/ReadWindow/btn_Back.png" />
+                  <Style.Triggers>
+                    <DataTrigger Value="True" Binding="{Binding ElementName=v, Path=IsMouseOver}">
+                      <Setter Property="Source" Value="Assets/ReadWindow/btn_Back_over.png" />
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </FrameworkElement.Style>
+            </Image>
+          </ContentControl.Content>
+        </Button>
+        <Button Name="w" Style="{StaticResource ButtonStyle}" Click="h">
+          <ContentControl.Content>
+            <Image Width="57" Height="24" SnapsToDevicePixels="True">
+              <FrameworkElement.Style>
+                <Style TargetType="{x:Type Image}">
+                  <Setter Property="Source" Value="Assets/ReadWindow/btn_Forward.png" />
+                  <Style.Triggers>
+                    <DataTrigger Value="True" Binding="{Binding ElementName=w, Path=IsMouseOver}">
+                      <Setter Property="Source" Value="Assets/ReadWindow/btn_Forward_over.png" />
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </FrameworkElement.Style>
+            </Image>
+          </ContentControl.Content>
+        </Button>
+        <Image Width="28" Height="24" Margin="7" SnapsToDevicePixels="True" Visibility="Collapsed">
+          <FrameworkElement.Style>
+            <Style TargetType="{x:Type Image}">
+              <Setter Property="Source" Value="Assets/ReadWindow/sound.png" />
+            </Style>
+          </FrameworkElement.Style>
+        </Image>
+        <Slider Name="x" Style="{StaticResource volumnSlider}" Width="80" Visibility="Collapsed" />
+      </StackPanel>
+    </StackPanel>
+  </Grid>
+</Window>

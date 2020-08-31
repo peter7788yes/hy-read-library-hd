@@ -1,0 +1,118 @@
+/*
+	OLD:直書雙欄以螢幕中間為 left=0, 直書單欄以螢幕左側為 left=0
+	NEW(Chrome 37):直書雙欄以
+*/
+html {
+	//width : 1086px;
+	font-size:20px;
+} 
+
+body {
+  	-webkit-writing-mode: horizontal;
+	//-webkit-text-orientation: vertical-right;
+  	-webkit-line-break: normal;
+	//-webkit-locale: zh-TW;
+	layout-flow: vertical-ideographic;
+  	font-family: "ARPLMingU20-Light", "儷宋 Pro", "LiSongPro", "@新細明體", "@PMINGLIU", "新細明體", "PMINGLIU", 'Times new roman', serif;
+  	//font-size: 1rem;
+
+}
+
+body {
+-webkit-column-axis: vertical; 
+-webkit-column-gap: 100px; 
+//-webkit-column-width: 583px; 
+-webkit-column-width: 700px; 
+-webkit-column-height: 500px; 
+
+//-webkit-column-rule:6px #ff00ff; 
+//-webkit-column-rule-style: solid; 
+margin: 0px; 
+//padding: 0px; 
+padding-left: 50px; 
+padding-right: 50px;
+
+padding-top: 50px; 
+padding-bottom: 50px;
+//width: 583px; 
+width: 700px; 
+
+height: 500px; 
+position: absolute; 
+right: 0px; 
+left: 0px; 
+//font-size: 1.5em; 
+color: black; 
+background-color: white; 
+overflow-y: hidden;
+overflow-x: hidden;
+
+}
+
+  
+a {
+	color: gray;
+	text-decoration: none;
+}
+
+h1 {
+	margin: 0px 0px 0px 1.5em;
+	text-indent:2em;
+}
+
+h2 {
+	font-size: 110%;
+}
+
+h3 {
+	text-align: end;
+	letter-spacing: 0.3em;
+}
+
+p {
+
+	line-height: 1.7em;
+	margin: 0px 1em 0px 0px;
+	//margin: 1em 2em 1em 1em;
+	text-align: justify;
+  	text-justify: inter-ideograph;
+
+}
+
+.buttonpara{
+	font-size: 1em;
+	line-height: 1em;
+	margin: 0px 0px 0px 0px;
+	text-align: justify;
+  	text-justify: inter-ideograph;
+}
+
+#buttons {
+	-webkit-writing-mode: horizontal-tb;
+    left: 200px;
+	top: 200px;
+	position: fixed;
+    border: solid black 1px;
+    background-color: lightgoldenrodyellow;
+    padding: 0px;
+    width: 400px;
+	z-index: 20;
+}
+
+/* Style declarations for two up mode */
+#two-up {
+  top: 3%;
+  position: absolute;
+  left: 0%;
+  height: 93%;
+  margin: 0;
+  width: 10px;
+  //-webkit-box-shadow: 0 0 15px 3px rgba(5, 5, 5, 0.7);
+  //-moz-box-shadow: 0 0 15px 3px rgba(5, 5, 5, 0.7);
+  //box-shadow: 0 0 15px 3px rgba(5, 5, 5, 0.7);
+  display: block;
+  background-color: #444;
+  opacity: 0.6;
+  z-index: 10; 
+}
+

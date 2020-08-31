@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="PaperLess_Emeeting.MVWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="MVWindow" Height="600" Width="800" Background="#FF000000" xmlns:paperless_emeeting="clr-namespace:PaperLess_Emeeting;assembly=PaperLess_Emeeting_NTPC">
+  <FrameworkElement.Resources>
+    <ResourceDictionary>
+      <SolidColorBrush x:Key="HorizontalSliderTrackNormalBackground" Color="#FFE7EAEA" />
+      <LinearGradientBrush x:Key="HorizontalSliderTrackNormalBorder" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="#FFAEB1AF" Offset="0.1" />
+        <GradientStop Color="White" Offset=".9" />
+      </LinearGradientBrush>
+      <Style x:Key="SliderRepeatButtonStyle" TargetType="{x:Type RepeatButton}">
+        <Setter Property="FrameworkElement.OverridesDefaultStyle" Value="True" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="{x:Type RepeatButton}">
+              <Rectangle Fill="#00FFFFFF" />
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+      </Style>
+      <Style x:Key="CustomThumbForSlider" TargetType="{x:Type Thumb}">
+        <Setter Property="FrameworkElement.OverridesDefaultStyle" Value="True" />
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="{x:Type Thumb}">
+              <Ellipse Fill="#FFFFFF" Stroke="#FFFFFF" Height="20" Width="20" />
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+      </Style>
+      <Style x:Key="MyCustomStyleForSlider" TargetType="{x:Type Slider}">
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="{x:Type Slider}">
+              <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                <Grid>
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
+                    <RowDefinition Height="Auto" />
+                  </Grid.RowDefinitions>
+                  <TickBar Name="TopTick" Visibility="Collapsed" Fill="{TemplateBinding Foreground}" Placement="Top" Height="4" Grid.Row="0" />
+                  <TickBar Name="BottomTick" Visibility="Collapsed" Fill="{TemplateBinding Foreground}" Placement="Bottom" Height="4" Grid.Row="0" />
+                  <Border Name="TrackBackground" Visibility="Collapsed" BorderThickness="1" CornerRadius="1" Margin="5,0" VerticalAlignment="Center" Height="4.0" Grid.Row="1" Background="{StaticResource HorizontalSliderTrackNormalBackground}" BorderBrush="{StaticResource HorizontalSliderTrackNormalBorder}">
+                    <Canvas Margin="-6,-1">
+                      <Rectangle Name="PART_SelectionRange" Visibility="Hidden" Height="4.0" Fill="{DynamicResource SystemColors.HighlightBrushKey}" Stroke="{DynamicResource SystemColors.ControlDarkDarkBrushKey}" StrokeThickness="1.0" />
+                    </Canvas>
+                  </Border>
+                  <Track Name="PART_Track" Grid.Row="1">
+                    <Track.DecreaseRepeatButton>
+                      <RepeatButton Command="{x:Static Slider.DecreaseLarge}" Style="{StaticResource SliderRepeatButtonStyle}" />
+                    </Track.DecreaseRepeatButton>
+                    <Track.IncreaseRepeatButton>
+                      <RepeatButton Command="{x:Static Slider.IncreaseLarge}" Style="{StaticResource SliderRepeatButtonStyle}" />
+                    </Track.IncreaseRepeatButton>
+                    <Track.Thumb>
+                      <Thumb Name="Thumb" Background="#FF000000" Style="{StaticResource CustomThumbForSlider}" />
+                    </Track.Thumb>
+                  </Track>
+                </Grid>
+              </Border>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+      </Style>
+    </ResourceDictionary>
+  </FrameworkElement.Resources>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="80" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="50" />
+    </Grid.RowDefinitions>
+    <MediaElement Name="mediaPlayer" Grid.RowSpan="3" />
+    <StackPanel Grid.RowSpan="2" ZIndex="10" Background="#00FFFFFF" Margin="0,49,0,0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+      <Image Name="img_animation" Visibility="Collapsed" Panel.ZIndex="10" Opacity="0" Height="128" Width="128" VerticalAlignment="Center">
+        <FrameworkElement.Style>
+          <Style TargetType="{x:Type Image}">
+            <Setter Property="Source" Value="images/MVWindow_Animation_Pause.png" />
+          </Style>
+        </FrameworkElement.Style>
+      </Image>
+    </StackPanel>
+    <DockPanel Name="HeaderDP" LastChildFill="False" ZIndex="1" Grid.Row="0" VerticalAlignment="Center">
+      <StackPanel Orientation="Horizontal" ZIndex="2" Background="#FFFFFFFF" Opacity=".8" Height="40" Width="40" Margin="10,0,0,0">
+        <Image Name="btnClose" Height="40" Width="40" DockPanel.Dock="Left" Source="images/exitReader@2x.png" />
+      </StackPanel>
+      <Image Name="btnSync" Stretch="Uniform" Height="80" Width="55" DockPanel.Dock="Right" Margin="0,3,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" Source="images/status-onair-off@2x.png" />
+      <ComboBox Name="cbBooks" Height="22" Width="200" DockPanel.Dock="Right" Margin="0,8,10,0" ToolTip="{Binding SelectedItem.Key, RelativeSource={RelativeSource Self}}" />
+    </DockPanel>
+    <Image Name="btnLight" Visibility="Collapsed" Stretch="Uniform" Panel.ZIndex="2" Height="80" Width="55" DockPanel.Dock="Right" Margin="0,3,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" Source="images/status-onair-off@2x.png" />
+    <DockPanel Name="FooterDP" LastChildFill="True" ZIndex="1" Grid.Row="2" VerticalAlignment="Center">
+      <Image Name="btnFunction" Height="40" Width="40" DockPanel.Dock="Left" Margin="5,0,5,0" Source="images/mv_right.png" />
+      <TextBlock Name="txtCurrentTime" DockPanel.Dock="Left" Foreground="#FFFFFFFF" VerticalAlignment="Center" Margin="0,4,0,-2" Height="18" />
+      <TextBlock Name="txtEndTime" DockPanel.Dock="Right" Foreground="#FFFFFFFF" VerticalAlignment="Center" Margin="0,4,15,0" />
+      <Grid>
+        <ProgressBar Name="pb" Panel.ZIndex="1" Margin="5,0,5,0" Height="5" Foreground="#70FF00" />
+        <Slider Name="SeekBar" Panel.ZIndex="2" Margin="5,0,5,0" Style="{StaticResource MyCustomStyleForSlider}" VerticalAlignment="Center" Thumb.DragStarted="SeekBar_DragStarted" Thumb.DragCompleted="SeekBar_DragCompleted" />
+      </Grid>
+    </DockPanel>
+  </Grid>
+</Window>

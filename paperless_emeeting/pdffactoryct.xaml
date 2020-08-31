@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="PaperLess_Emeeting.PDFFactoryCT" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" Background="#FFFEFBF2" xmlns:paperless_emeeting="clr-namespace:PaperLess_Emeeting;assembly=PaperLess_Emeeting_NTPC">
+  <Grid Margin="29,5,29,0">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="45" />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+    <Grid Row="0" Height="45" Margin="29,0,29,0">
+      <Grid Name="btnServerCtrl" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="44" />
+          <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Image Name="btnStatus" Grid.ColumnSpan="2" Panel.ZIndex="-1" Width="150" Height="40" Source="images/btn_broadcast_broken.png" HorizontalAlignment="Left" />
+        <TextBlock Name="txtStatus" Margin="7,0,7,0" Grid.Column="1" FontSize="16" Foreground="#707A82" Text="未啟動" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+      </Grid>
+      <TextBlock Grid.Row="0" Grid.Column="0" FontSize="24" Foreground="#FF1C5576" Text="匯出附件清單" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+        <Canvas Width="200">
+          <TextBox Name="txtKeyword" Padding="15,0,48,0" BorderThickness="0" Width="200" FontSize="24" Foreground="#FF1C5576" TextAlignment="Left" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Top="-11">
+            <Control.Background>
+              <ImageBrush ImageSource="images/search_bg.png" />
+            </Control.Background>
+          </TextBox>
+          <Image Width="26" Height="32" Source="images/icon_search@2x.png" HorizontalAlignment="Right" VerticalAlignment="Center" Canvas.Left="167" Canvas.Top="-12" />
+        </Canvas>
+      </StackPanel>
+    </Grid>
+    <Border BorderBrush="#FF45535E" BorderThickness="1" Grid.Row="1" Margin="29,7,29,23">
+      <Grid Background="#FF45535E">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="2*" />
+          <ColumnDefinition Width="5*" />
+          <ColumnDefinition Width="2*" />
+          <ColumnDefinition Width="2*" />
+          <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="45" />
+          <RowDefinition />
+        </Grid.RowDefinitions>
+        <Label Panel.ZIndex="-1" Grid.Row="0" Grid.Column="0" BorderBrush="#5F879B" BorderThickness="0,0,1,0" />
+        <Label Panel.ZIndex="-1" Grid.Row="0" Grid.Column="1" BorderBrush="#5F879B" BorderThickness="0,0,1,0" />
+        <Label Panel.ZIndex="-1" Grid.Row="0" Grid.Column="2" BorderBrush="#5F879B" BorderThickness="0,0,1,0" />
+        <Label Panel.ZIndex="-1" Grid.Row="0" Grid.Column="3" BorderBrush="#5F879B" BorderThickness="0,0,1,0" />
+        <Label Panel.ZIndex="-1" Grid.Row="0" Grid.Column="4" BorderBrush="#5F879B" BorderThickness="0,0,1,0" />
+        <Label Panel.ZIndex="-1" Grid.ColumnSpan="5" BorderBrush="#5F879B" BorderThickness="0,0,0,1" />
+        <TextBlock FontSize="22" Grid.Row="0" Grid.Column="0" Foreground="#FFFFFFFF" TextAlignment="Center" Text="序號" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBlock FontSize="22" Grid.Row="0" Grid.Column="1" Foreground="#FFFFFFFF" TextAlignment="Center" Text="檔名" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBlock FontSize="22" Grid.Row="0" Grid.Column="2" Foreground="#FFFFFFFF" TextAlignment="Center" Text="匯出狀態" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBlock FontSize="22" Grid.Row="0" Grid.Column="3" Foreground="#FFFFFFFF" TextAlignment="Center" Text="重新匯出" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBlock FontSize="22" Grid.Row="0" Grid.Column="4" Foreground="#FFFFFFFF" TextAlignment="Center" Text="下載" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Border BorderThickness="0,0,0,1" Grid.Row="1" Grid.ColumnSpan="5">
+          <ScrollViewer Style="{StaticResource myScrollViewerStyle2}">
+            <StackPanel Name="PDFFactoryRowSP" Background="#FFFEFBF2" />
+          </ScrollViewer>
+        </Border>
+      </Grid>
+    </Border>
+  </Grid>
+</UserControl>

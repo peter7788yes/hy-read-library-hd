@@ -1,0 +1,191 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="ReadPageModule.StrokeToolPanelHorizontal" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" x:Name="mainPanel" Width="240" Height="30" xmlns:readpagemodule="clr-namespace:ReadPageModule;assembly=ReadPageModule">
+  <FrameworkElement.Resources>
+    <ResourceDictionary>
+      <Style x:Key="ButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="#00FFFFFF" />
+        <Setter Property="BorderBrush" Value="{x:Null}" />
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="{x:Type ButtonBase}">
+              <Border Background="{TemplateBinding Background}" Uid="Border_39">
+                <ContentPresenter Name="Content" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" RenderTransformOrigin="0.5,0.5" Uid="ContentPresenter_2" />
+              </Border>
+              <ControlTemplate.Triggers>
+                <Trigger Property="UIElement.IsMouseOver" Value="True">
+                  <Setter TargetName="Content" Property="RenderTransform">
+                    <Setter.Value>
+                      <ScaleTransform ScaleY="1.0" ScaleX="1.0" />
+                    </Setter.Value>
+                  </Setter>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                  <Setter TargetName="Content" Property="RenderTransform">
+                    <Setter.Value>
+                      <ScaleTransform ScaleY="0.9" ScaleX="0.9" />
+                    </Setter.Value>
+                  </Setter>
+                </Trigger>
+              </ControlTemplate.Triggers>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+      </Style>
+    </ResourceDictionary>
+  </FrameworkElement.Resources>
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="2*" />
+    </Grid.ColumnDefinitions>
+    <Grid Column="0" Visibility="Collapsed">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <Button Name="undoButton" Grid.Column="0" Height="20" Margin="5" Uid="SPanelCheck" Opacity="0.5" Content="{Binding up, Source={StaticResource Resources}}" Click="b" />
+      <Button Name="redoButton" Grid.Column="1" Height="20" Margin="5" Uid="SPanelCheck" Opacity="0.5" Content="{Binding down, Source={StaticResource Resources}}" Click="c" />
+    </Grid>
+    <Grid Column="1">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Button Name="penButton" Grid.Column="0" Style="{StaticResource ButtonStyle}" ToolTip="{Binding stroke, Source={StaticResource Resources}}" Click="f">
+          <ContentControl.Content>
+            <Image Source="Assets/mainWindow/05.png" Height="20" Width="30" />
+          </ContentControl.Content>
+        </Button>
+        <Popup Name="penTypePopup">
+          <Border BorderBrush="#FF000000" BorderThickness="5" CornerRadius="5">
+            <Grid Name="penSubPanelGrid" Background="#FFFFFFFF">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+              </Grid.ColumnDefinitions>
+              <Button Name="curveButton" Grid.Column="0" Margin="5,6,5,5" Style="{StaticResource ButtonStyle}" ToolTip="{Binding curve, Source={StaticResource Resources}}" Click="m">
+                <ContentControl.Content>
+                  <Image Source="Assets/mainWindow/05.png" Height="20" Width="30" />
+                </ContentControl.Content>
+              </Button>
+              <Button Name="straightPanelButton" Grid.Column="1" Opacity="0.5" Margin="5,6,5,5" ToolTip="straight" Style="{StaticResource ButtonStyle}" Click="l">
+                <ContentControl.Content>
+                  <Image Source="Assets/mainWindow/06.png" Height="20" Width="30" />
+                </ContentControl.Content>
+              </Button>
+            </Grid>
+          </Border>
+        </Popup>
+        <Button Name="colorPanelButton" Grid.Column="1" Uid="SPanelCheck" Opacity="0.5" Style="{StaticResource ButtonStyle}" ToolTip="{Binding palette, Source={StaticResource Resources}}" Click="a">
+          <ContentControl.Content>
+            <Image Source="Assets/mainWindow/02.png" Height="20" Width="30" />
+          </ContentControl.Content>
+        </Button>
+        <Popup Name="colorPopup">
+          <Border Width="300" Height="200" BorderBrush="#FF000000" BorderThickness="5" CornerRadius="5">
+            <Grid Background="#FFFFFFFF">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+              </Grid.ColumnDefinitions>
+              <Grid Name="penToolPanelGrid" Column="0">
+                <StackPanel Orientation="Vertical">
+                  <StackPanel Orientation="Horizontal">
+                    <Button Name="transparentButton" Style="{StaticResource ButtonStyle}" ToolTip="{Binding transparent, Source={StaticResource Resources}}" Click="n">
+                      <ContentControl.Content>
+                        <Image Source="Assets/mainWindow/Transparent.png" Height="20" Width="60" />
+                      </ContentControl.Content>
+                    </Button>
+                    <Button Name="nonTransparentButton" Opacity="0.5" Style="{StaticResource ButtonStyle}" ToolTip="{Binding opaque, Source={StaticResource Resources}}" Click="k">
+                      <ContentControl.Content>
+                        <Image Source="Assets/mainWindow/NonTransparent.png" Height="20" Width="60" />
+                      </ContentControl.Content>
+                    </Button>
+                  </StackPanel>
+                  <Path Name="demoStroke" Stroke="#FFD13030" StrokeThickness="1" Data="M10,10 Q10,10 80,40 Q150,70 90,60 Q30,50 140,90" Height="100" />
+                  <TextBlock Text="{Binding thickness, Source={StaticResource Resources}}" />
+                  <Slider Name="strokeWidthSlider" Minimum="3" Maximum="12" SmallChange="1" IsSnapToTickEnabled="True" ValueChanged="a" />
+                </StackPanel>
+              </Grid>
+              <Grid Name="colorPanel" Column="1">
+                <Grid Height="150">
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                  </Grid.RowDefinitions>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="35" />
+                    <ColumnDefinition Width="35" />
+                    <ColumnDefinition Width="35" />
+                    <ColumnDefinition Width="35" />
+                  </Grid.ColumnDefinitions>
+                  <Button Grid.Row="0" Grid.Column="0" Tag="red" Margin="5" Background="#FF000000" Click="setColor" />
+                  <Button Grid.Row="0" Grid.Column="1" Tag="gray" Margin="5" Background="#FF989898" Click="setColor" />
+                  <Button Grid.Row="0" Grid.Column="2" Tag="blue" Margin="5" Background="#FFc0c0c0" Click="setColor" />
+                  <Button Grid.Row="0" Grid.Column="3" Tag="blue" Margin="5" Background="#FFFFFFFF" Click="setColor" />
+                  <Button Grid.Row="1" Grid.Column="0" Tag="red" Margin="5" Background="#FFFF0000" Click="setColor" />
+                  <Button Grid.Row="1" Grid.Column="1" Tag="gray" Margin="5" Background="#FF02Fe41" Click="setColor" />
+                  <Button Grid.Row="1" Grid.Column="2" Tag="blue" Margin="5" Background="#FF202bFa" Click="setColor" />
+                  <Button Grid.Row="1" Grid.Column="3" Tag="blue" Margin="5" Background="#FFFDFC39" Click="setColor" />
+                  <Button Grid.Row="2" Grid.Column="0" Tag="red" Margin="5" Background="#FF00ffff" Click="setColor" />
+                  <Button Grid.Row="2" Grid.Column="1" Tag="gray" Margin="5" Background="#FFff17f9" Click="setColor" />
+                  <Button Grid.Row="2" Grid.Column="2" Tag="blue" Margin="5" Background="#FF6f8f8f" Click="setColor" />
+                  <Button Grid.Row="2" Grid.Column="3" Tag="blue" Margin="5" Background="#FF0664a1" Click="setColor" />
+                  <Button Grid.Row="3" Grid.Column="0" Tag="red" Margin="5" Background="#FF51425b" Click="setColor" />
+                  <Button Grid.Row="3" Grid.Column="1" Tag="gray" Margin="5" Background="#FF5f3e30" Click="setColor" />
+                  <Button Grid.Row="3" Grid.Column="2" Tag="blue" Margin="5" Background="#FFfa5e53" Click="setColor" />
+                  <Button Grid.Row="3" Grid.Column="3" Tag="blue" Margin="5" Background="#FF5a7d50" Click="setColor" />
+                  <Button Grid.Row="4" Grid.Column="0" Tag="red" Margin="5" Background="#FFbb1b67" Click="setColor" />
+                  <Button Grid.Row="4" Grid.Column="1" Tag="gray" Margin="5" Background="#FF23a9fa" Click="setColor" />
+                  <Button Grid.Row="4" Grid.Column="2" Tag="blue" Margin="5" Background="#FF827815" Click="setColor" />
+                  <Button Grid.Row="4" Grid.Column="3" Tag="blue" Margin="5" Background="#FFa87d84" Click="setColor" />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Border>
+        </Popup>
+        <Button Name="eraserButton" Grid.Column="2" Height="20" Margin="5" Uid="SPanelCheck" Opacity="0.5" ToolTip="{Binding eraser, Source={StaticResource Resources}}" BorderBrush="{x:Null}" Click="e">
+          <Control.Background>
+            <ImageBrush ImageSource="Assets/mainWindow/03.png" />
+          </Control.Background>
+          <Control.Template>
+            <ControlTemplate>
+              <Grid Name="bg">
+                <Image Source="Assets/mainWindow/03.png" />
+              </Grid>
+              <ControlTemplate.Triggers>
+                <Trigger Property="UIElement.IsMouseOver" Value="True">
+                  <Setter TargetName="bg" Property="Panel.Background" Value="#FFFFFFFF" />
+                </Trigger>
+              </ControlTemplate.Triggers>
+            </ControlTemplate>
+          </Control.Template>
+        </Button>
+        <Button Name="deleteAllButton" Grid.Column="3" Height="20" Margin="5" Uid="SPanelCheck" Opacity="0.5" Content="{Binding delete, Source={StaticResource Resources}}" ToolTip="{Binding delAllStrokes, Source={StaticResource Resources}}" BorderBrush="{x:Null}" Click="d">
+          <Control.Background>
+            <ImageBrush ImageSource="Assets/mainWindow/04.png" />
+          </Control.Background>
+          <Control.Template>
+            <ControlTemplate>
+              <Grid Name="bg">
+                <Image Source="Assets/mainWindow/04.png" />
+              </Grid>
+              <ControlTemplate.Triggers>
+                <Trigger Property="UIElement.IsMouseOver" Value="True">
+                  <Setter TargetName="bg" Property="Panel.Background" Value="#FFFFFFFF" />
+                </Trigger>
+              </ControlTemplate.Triggers>
+            </ControlTemplate>
+          </Control.Template>
+        </Button>
+      </Grid>
+    </Grid>
+  </Grid>
+</UserControl>

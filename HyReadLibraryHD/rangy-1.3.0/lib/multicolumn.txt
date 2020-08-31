@@ -1,0 +1,168 @@
+function maxArea()
+{
+	var elements = document.getElementsByTagName('html');
+	var element = elements[0];
+	element.style.backgroundColor = 'transparent';
+	
+	var w = window.getComputedStyle(elements[0]).getPropertyValue('max-width');
+	var h = window.getComputedStyle(elements[0]).getPropertyValue('max-height');
+	
+	var area = new Object();
+	area.width = w;
+	area.height = h;
+	return JSON.stringify(area);
+}
+
+function requestWritingMode()
+{
+	window.TextSelection.returnWritingMode(getWritingMode());
+}
+
+function getWritingMode()
+{
+	var wrmaxAreaResult = maxArea();
+	window.TextSelection.jsError("wrmaxAreaResult="+wrmaxAreaResult);
+	var writingModeStr = writingMode();
+	if (writingModeStr == null) {
+		return false;
+	}
+	else {
+		var vertical = (writingModeStr.toLowerCase().search('vertical') != -1);
+		return vertical;
+	}
+}
+
+function writingMode()
+{
+	var elements = document.getElementsByTagName('html');
+	var result = window.getComputedStyle(elements[0]).getPropertyValue('-epub-writing-mode');
+	if (result == null)
+		result = window.getComputedStyle(elements[0]).getPropertyValue('-webkit-writing-mode');
+	return result;
+}
+
+function initialRule(colorRule,maxWidth,maxHeight,width,gap,height,paddingTop,paddingLeft,paddingBtm,paddingRight)
+{
+	addCSSTextColorRule(colorRule);
+	removeHyperLink();
+	addImgRule(maxWidth,maxHeight);
+	addHtmlRule(width,gap,height,paddingTop,paddingLeft,paddingBtm,paddingRight);
+}
+
+function addImgRuleForCover(maxHeight)
+{
+	var images = document.getElementsByTagName("img");
+	for (var i = 0; i < images.length; i++) {
+		var img = images[i];
+		img.style.height = 'auto';
+		img.style.width = 'auto';
+		img.style.maxWidth = '100%';
+		img.style.maxHeight = maxHeight + 'px';
+	}
+}
+
+function addImgRule(maxWidth,maxHeight)
+{
+	addCSSRule('div', 'width: auto; height: auto;max-width: 100%%'+ maxHeight +'px;');
+	addCSSRule('img', 'width: auto; height: auto; max-width:100%%;max-height:'+ maxHeight +'px;');
+	addCSSRule('video', 'width: auto; height: auto;max-width: 100%%'+ maxHeight +'px;');
+	addCSSRule('audio', 'width: auto; height: auto;max-width: 100%%'+ maxHeight +'px;');
+}
+
+function addHtmlRule(writingMode,width,gap,height,paddingTop,paddingLeft,paddingBtm,paddingRight)
+{
+	//alert('writingMode='+writingMode);
+	var selector = 'html body';//'html'
+	var newRule = '';
+	newRule += '-epub-writing-mode:' + writingMode + ';';//vertical-rl; ';
+	newRule += '-webkit-writing-mode:' + writingMode + ';' ;// vertical-rl; ';
+	newRule += '-webkit-line-break: normal;';
+	newRule += '-webkit-column-axis: horizontal;'; 
+	newRule += 'margin:0px;';
+	newRule += 'overflow: hidden;';
+	newRule += 'overflow-y: hidden;';
+	newRule += 'overflow-x: hidden;';		
+	newRule += '-webkit-column-width: ' + width + 'px; ';
+	newRule += 'width: ' + width + 'px; ';
+	newRule += '-webkit-column-gap: ' + gap + 'px; ';
+	newRule += 'height: ' + height + 'px; ';
+	newRule += 'padding-top: ' + paddingTop + 'px; ';
+	newRule += 'padding-left: ' + paddingLeft + 'px; ';
+	newRule += 'padding-bottom: ' + paddingBtm + 'px; ';
+	newRule += 'padding-right: ' + paddingRight + 'px;';
+
+    addCSSRule(selector, newRule);
+	addCSSRule('::selection', 'background: #a8d1ff;');
+	addImgRule(width, height);
+	
+}
+
+function addCSSTextColorRule(color)
+{
+	document.body.style.webkitTextFillColor = color ;
+}
+
+
+function addCSSRule(selector, newRule)
+{
+    var mySheet = document.styleSheets[0];
+	if (mySheet.addRule) {
+        mySheet.addRule(selector, newRule);
+    }
+    else {
+        ruleIndex = mySheet.cssRules.length;
+        mySheet.insertRule(selector + '{' + newRule + ';}', ruleIndex);
+    }
+	
+}
+
+function removeHyperLink()
+{
+   var hyperLinkNodes = document.getElementsByTagName("a");
+   for(var i = 0; i < hyperLinkNodes.length; i++){
+       hyperLinkNodes[i].removeAttribute("href");
+   }
+}
+
+function surplusRect()
+{
+   var element = document.getElementById("surplus_");
+   var rects = element.getClientRects();
+   if  (rects.length > 0) {
+		var handleBounds = "{'left': " + rects[0].left + ", ";
+	   	handleBounds += "'top': " + rects[0].top + ", ";
+	   	handleBounds += "'right': " + rects[0].right + ", ";
+	   	handleBounds += "'bottom': " + rects[0].bottom + "}";
+		window.TextSelection.returnSurplusRect(handleBounds);
+   }
+   //window.TextSelection.returnSurplusRect("");
+}
+
+function imageFromTouchViewPoint(boundHeight,pointX,pointY)
+{
+	var scrollPositionY = window.pageYOffset;
+	var displayHeight = window.outerHeight;
+	var scale = boundHeight / displayHeight;
+	
+	window.TextSelection.jsError("boundHeight="+boundHeight);
+	window.TextSelection.jsError("pointX="+pointX);
+	window.TextSelection.jsError("pointY="+pointY);
+	window.TextSelection.jsError("scrollPositionY="+scrollPositionY);
+	window.TextSelection.jsError("displayHeight="+displayHeight);
+	window.TextSelection.jsError("scale="+scale);
+	
+	pointY *= scale;
+	pointY += scrollPositionY;
+	var tagName = document.elementFromPoint(pointX, pointY).tagName;
+	
+	window.TextSelection.jsError("tagName="+tagName);
+	
+	if(tagName != null) 
+	{
+		var imgURL = document.elementFromPoint(pointX, pointY).src;
+		if(imgURL != null) 
+		{
+			window.TextSelection.returnImageFromTouchViewPoint(imgURL);
+		}
+	}
+}

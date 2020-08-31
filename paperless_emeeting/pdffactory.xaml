@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="PaperLess_Emeeting.PDFFactory" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="PDFFactory" Height="0" Width="0" xmlns:paperless_emeeting="clr-namespace:PaperLess_Emeeting;assembly=PaperLess_Emeeting_NTPC">
+  <Grid />
+</Window>

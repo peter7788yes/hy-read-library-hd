@@ -1,0 +1,25 @@
+html {
+	overflow:hidden;
+}
+.icon {
+	//background-attachment: fixed;
+	//background-repeat: no-repeat; 
+	//background-position: -96px -96px;
+	background-image: url("ios_epub_png@3x.png");
+}
+
+.highlight_dummy{}
+
+.highlight_yellow {background-color: #FFF200 !important; text-decoration: none !important;}
+
+.highlight_pink {background-color: #F1BFCE !important; text-decoration: none !important;}
+
+.highlight_green {background-color: #B5DDB7 !important; text-decoration: none !important;}
+
+.highlight_blue {background-color: #C2DFF1 !important; text-decoration: none !important;}
+
+.highlight_note {background-color: #E9EAEA !important; text-decoration: none !important;}
+
+#summary {
+	border: dotted orange 1px !important;
+}

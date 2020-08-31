@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="PaperLess_Emeeting.LawListCT" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" Background="#fefbf2" xmlns:paperless_emeeting="clr-namespace:PaperLess_Emeeting;assembly=PaperLess_Emeeting_NTPC">
+  <Grid Margin="29,5,29,0">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="45" />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+    <Grid Row="0" Margin="29,2,29,0">
+      <TextBlock Name="LawCT_Title" Grid.Row="0" Grid.Column="0" FontSize="24" Foreground="#FF1C5576" Text="文件庫" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+        <Canvas Width="200">
+          <TextBox Name="txtKeyword" Padding="15,0,48,0" BorderThickness="0" Width="200" FontSize="24" Foreground="#FF1C5576" TextAlignment="Left" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Top="-11">
+            <Control.Background>
+              <ImageBrush ImageSource="images/search_bg.png" />
+            </Control.Background>
+          </TextBox>
+          <Image Width="26" Height="32" Source="images/icon_search@2x.png" HorizontalAlignment="Right" VerticalAlignment="Center" Canvas.Left="167" Canvas.Top="-12" />
+        </Canvas>
+      </StackPanel>
+    </Grid>
+    <Border BorderBrush="#FF45535E" BorderThickness="1" Grid.Row="1" Margin="29,7,29,23">
+      <Grid Background="#FF45535E">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="125*" />
+          <ColumnDefinition Width="533*" />
+          <ColumnDefinition Width="100*" />
+          <ColumnDefinition Width="100*" />
+          <ColumnDefinition Width="100*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="45" />
+          <RowDefinition />
+        </Grid.RowDefinitions>
+        <Label Panel.ZIndex="-1" Grid.Row="0" Grid.Column="0" BorderBrush="#5F879B" BorderThickness="0,0,1,0" />
+        <Label Panel.ZIndex="-1" Grid.Row="0" Grid.Column="1" BorderBrush="#5F879B" BorderThickness="0,0,1,0" />
+        <Label Panel.ZIndex="-1" Grid.Row="0" Grid.Column="2" BorderBrush="#5F879B" BorderThickness="0,0,1,0" />
+        <Label Panel.ZIndex="-1" Grid.Row="0" Grid.Column="3" BorderBrush="#5F879B" BorderThickness="0,0,1,0" />
+        <Label Panel.ZIndex="-1" Grid.ColumnSpan="4" BorderBrush="#5F879B" BorderThickness="0,0,0,1" />
+        <TextBlock Margin="10,0,10,0" FontSize="22" Grid.Row="0" Grid.Column="0" Foreground="#FFFFFFFF" TextAlignment="Left" Text="更新日期" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBlock Margin="20,0,20,0" FontSize="22" Grid.Row="0" Grid.Column="1" Foreground="#FFFFFFFF" TextAlignment="Left" Text="文件名稱" HorizontalAlignment="Left" VerticalAlignment="Center" />
+        <TextBlock Margin="20,0,20,0" FontSize="22" Grid.Row="0" Grid.Column="2" Foreground="#FFFFFFFF" TextAlignment="Left" Text="更新" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBlock Margin="20,0,20,0" FontSize="22" Grid.Row="0" Grid.Column="3" Foreground="#FFFFFFFF" TextAlignment="Left" Text="瀏覽" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBlock Margin="20,0,20,0" FontSize="22" Grid.Row="0" Grid.Column="4" Foreground="#FFFFFFFF" TextAlignment="Left" Text="刪除" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Border BorderThickness="0,0,0,1" Grid.Row="1" Grid.ColumnSpan="5">
+          <ScrollViewer Style="{StaticResource myScrollViewerStyle2}">
+            <StackPanel Name="LawRowSP" Background="#FFFEFBF2" />
+          </ScrollViewer>
+        </Border>
+      </Grid>
+    </Border>
+  </Grid>
+</UserControl>

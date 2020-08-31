@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="PaperLess_Emeeting.MeetingRoom" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" Margin="5,5,5,5" xmlns:paperless_emeeting="clr-namespace:PaperLess_Emeeting;assembly=PaperLess_Emeeting_NTPC">
+  <FrameworkElement.Resources>
+    <ResourceDictionary>
+      <Storyboard x:Key="sb" Duration="0:0:10.1">
+        <DoubleAnimation Name="da" Storyboard.TargetName="ajaxLoader" Storyboard.TargetProperty="Width" From="32" To="32" Duration="0:0:10.1" />
+      </Storyboard>
+    </ResourceDictionary>
+  </FrameworkElement.Resources>
+  <Grid Name="grid" Height="100" Width="205">
+    <Border Name="RoomBG" Background="#FFFFFFFF" CornerRadius="8">
+      <Border Name="RoomInnerBG" Visibility="Collapsed" Background="#5a6062" Margin="2" CornerRadius="8" />
+    </Border>
+    <DockPanel LastChildFill="True" Background="#00FFFFFF">
+      <StackPanel DockPanel.Dock="Top" Background="#00FFFFFF" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding ElementName=grid, Path=ActualWidth}">
+        <Image Name="btnSeries" Margin="10,-13,0,0" Width="20" Height="20" Source="images/icon_mettingSet@2x.png" Visibility="Collapsed" />
+        <TextBlock Name="txtMeetingName" Margin="10,3,0,0" TextWrapping="Wrap" FontSize="16" FontWeight="Bold" Width="155" Height="40" />
+      </StackPanel>
+      <Grid>
+        <StackPanel ZIndex="2" Background="#00FFFFFF" Margin="0,8,0,0">
+          <TextBlock Name="txtLocation" FontSize="12" TextWrapping="Wrap" TextAlignment="Left" Padding="10,0,47,0" Width="{Binding ActualWidth, ElementName=grid}" />
+          <TextBlock Name="txtTime" FontSize="12" TextWrapping="Wrap" HorizontalAlignment="Left" TextAlignment="Left" Padding="10,3,0,0" />
+        </StackPanel>
+        <Grid Width="85" HorizontalAlignment="Right" ZIndex="3" Margin="0,0,2,0">
+          <Image Name="ajaxLoader" Margin="30,0,0,0" Panel.ZIndex="3" Width="32" Height="32" />
+          <Image Name="btnDownload" Visibility="Collapsed" Margin="30,0,0,0" Panel.ZIndex="5" Width="44" Height="40" Source="images/icon_download@2x.png" />
+          <Image Name="btnDownloadForbidden" Visibility="Collapsed" Margin="30,0,0,0" Panel.ZIndex="5" Width="44" Height="40" Source="images/icon_download_forbidden@2x.png" />
+          <Image Name="btnRead2Forbidden" Visibility="Collapsed" Margin="30,0,0,0" Panel.ZIndex="5" Width="44" Height="40" Source="images/icon_read2_forbidden@2x.png" />
+          <Image Name="btnDelete" Visibility="Collapsed" Margin="30,0,0,0" Panel.ZIndex="5" Width="44" Height="40" Source="images/icon_delete@2x.png" />
+          <Image Name="btnRefresh" Visibility="Collapsed" Margin="30,0,0,0" Panel.ZIndex="5" Width="44" Height="40" Source="images/icon_update@2x.png" />
+          <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Name="txtPercent" Visibility="Collapsed" Margin="0,0,0,-3" FontSize="18" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <Image Name="btnPause" Visibility="Collapsed" Margin="3,0,0,-1" Panel.ZIndex="5" Width="30" Height="35" Source="images/icon_pause@2x.png" />
+            <Image Name="btnPausing" Visibility="Collapsed" Margin="3,0,0,-1" Panel.ZIndex="5" Width="30" Height="35" Source="images/icon_pausing@2x.png" />
+          </StackPanel>
+          <ProgressBar Name="pb" Visibility="Collapsed" Margin="0,0,0,5" VerticalAlignment="Bottom" Height="5" Background="#FF000000" Maximum="100" Width="78" />
+        </Grid>
+      </Grid>
+    </DockPanel>
+  </Grid>
+</UserControl>

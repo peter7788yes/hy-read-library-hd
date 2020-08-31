@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="PaperLess_Emeeting.MenuButton" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" Margin="10,5,0,10" xmlns:paperless_emeeting="clr-namespace:PaperLess_Emeeting;assembly=PaperLess_Emeeting_NTPC">
+  <Grid>
+    <Image Name="btnImg" Panel.ZIndex="1" Width="50" Height="60" Stretch="Uniform" SnapsToDevicePixels="True" />
+    <TextBlock Name="txtBtnName" Panel.ZIndex="2" FontSize="12" Width="50" Foreground="#FFFFFFFF" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,43,0,0">
+      <UIElement.Effect>
+        <DropShadowEffect ShadowDepth="1" Direction="315" Color="Black" Opacity="0.75" BlurRadius="1.0" />
+      </UIElement.Effect>
+    </TextBlock>
+  </Grid>
+</UserControl>

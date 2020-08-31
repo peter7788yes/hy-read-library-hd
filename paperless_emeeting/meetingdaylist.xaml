@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="PaperLess_Emeeting.MeetingDayList" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" Margin="12,0,12,0" BorderThickness="0.1" BorderBrush="#FF000000" xmlns:paperless_emeeting="clr-namespace:PaperLess_Emeeting;assembly=PaperLess_Emeeting_NTPC">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition />
+    </Grid.ColumnDefinitions>
+    <DockPanel LastChildFill="True">
+      <Grid>
+        <StackPanel Name="DateSP" Background="#DCE1E4" Width="120">
+          <Border Background="#45535E" BorderThickness="5" BorderBrush="#54A8B9" Width="72" Height="25" CornerRadius="0,0,5,5">
+            <Canvas Background="#54A8B9">
+              <TextBlock Name="txtMonth" FontSize="20" Background="#54A8B9" Foreground="#FFFFFF" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Width="62" Canvas.Top="-5" Height="23" />
+            </Canvas>
+          </Border>
+          <TextBlock Name="txtDay" FontSize="48" Foreground="#46545F" HorizontalAlignment="Center" VerticalAlignment="Center" />
+          <TextBlock Name="txtWeek" FontSize="25" Foreground="#46545F" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" />
+        </StackPanel>
+      </Grid>
+      <Grid Name="RoomGrid" Background="#A9B4BA">
+        <WrapPanel Name="MeetingRoomWP" Background="#00FFFFFF" Margin="15,5,15,5" />
+      </Grid>
+    </DockPanel>
+  </Grid>
+</UserControl>

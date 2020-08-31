@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{7BAE5731-7FB2-4D34-A122-CD7C0D051EF5}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>WinExe</OutputType>
+    <LangVersion>1</LangVersion>
+    <AssemblyName>ReadPageModule</AssemblyName>
+    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationFramework">
+      <HintPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\PresentationFramework\v4.0_4.0.0.0__31bf3856ad364e35\PresentationFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\System.Windows.Forms\v4.0_4.0.0.0__b77a5c561934e089\System.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\System.Drawing\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xaml">
+      <HintPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Xaml\v4.0_4.0.0.0__b77a5c561934e089\System.Xaml.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase">
+      <HintPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\WindowsBase\v4.0_4.0.0.0__31bf3856ad364e35\WindowsBase.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System\v4.0_4.0.0.0__b77a5c561934e089\System.dll</HintPath>
+    </Reference>
+    <Reference Include="BookFormatLoader">
+      <HintPath>C:\Program Files (x86)\HyReadLibraryHD\BookFormatLoader.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore">
+      <HintPath>C:\Windows\Microsoft.Net\assembly\GAC_64\PresentationCore\v4.0_4.0.0.0__31bf3856ad364e35\PresentationCore.dll</HintPath>
+    </Reference>
+    <Reference Include="ConfigureManagerModule">
+      <HintPath>C:\Program Files (x86)\HyReadLibraryHD\ConfigureManagerModule.dll</HintPath>
+    </Reference>
+    <Reference Include="BookManagerModule">
+      <HintPath>C:\Program Files (x86)\HyReadLibraryHD\BookManagerModule.dll</HintPath>
+    </Reference>
+    <Reference Include="CACodec">
+      <HintPath>C:\Program Files (x86)\HyReadLibraryHD\CACodec.dll</HintPath>
+    </Reference>
+    <Reference Include="DataAccessObject">
+      <HintPath>C:\Program Files (x86)\HyReadLibraryHD\DataAccessObject.dll</HintPath>
+    </Reference>
+    <Reference Include="DownloadManagerModule">
+      <HintPath>C:\Program Files (x86)\HyReadLibraryHD\DownloadManagerModule.dll</HintPath>
+    </Reference>
+    <Reference Include="LocalFilesManagerModule">
+      <HintPath>C:\Program Files (x86)\HyReadLibraryHD\LocalFilesManagerModule.dll</HintPath>
+    </Reference>
+    <Reference Include="MultiLanquageModule">
+      <HintPath>C:\Program Files (x86)\HyReadLibraryHD\MultiLanquageModule.exe</HintPath>
+    </Reference>
+    <Reference Include="System.Xml">
+      <HintPath>C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Xml\v4.0_4.0.0.0__b77a5c561934e089\System.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="HyftdMoudule">
+      <HintPath>C:\Program Files (x86)\HyReadLibraryHD\HyftdMoudule.dll</HintPath>
+    </Reference>
+    <Reference Include="Utility">
+      <HintPath>C:\Program Files (x86)\HyReadLibraryHD\Utility.dll</HintPath>
+    </Reference>
+    <Reference Include="Network">
+      <HintPath>C:\Program Files (x86)\HyReadLibraryHD\Network.dll</HintPath>
+    </Reference>
+    <Reference Include="ReachFramework">
+      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\ReachFramework\v4.0_4.0.0.0__31bf3856ad364e35\ReachFramework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DotfuscatorAttribute.cs" />
+    <Compile Include="m.cs" />
+    <Compile Include="n.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PXCView36\PDFDoc.cs" />
+    <Compile Include="PXCView36\PXCV_Error.cs" />
+    <Compile Include="PXCView36\PXCV_Helper.cs" />
+    <Compile Include="PXCView36\PXCV_Lib36.cs" />
+    <Compile Include="ReadPageModule.Properties\Resources.cs" />
+    <Compile Include="ReadPageModule.Properties\Settings.cs" />
+    <Compile Include="ReadPageModule\App.cs" />
+    <Compile Include="ReadPageModule\AudioPlayer.cs" />
+    <Compile Include="ReadPageModule\BooleanMediaDownloadStatusConverter.cs" />
+    <Compile Include="ReadPageModule\CulturesHelper.cs" />
+    <Compile Include="ReadPageModule\DataRequestEventArgs.cs" />
+    <Compile Include="ReadPageModule\fullTextView.cs" />
+    <Compile Include="ReadPageModule\HlsPlayer.cs" />
+    <Compile Include="ReadPageModule\imageSourceRenderedResultEventArgs.cs" />
+    <Compile Include="ReadPageModule\ImageStatus.cs" />
+    <Compile Include="ReadPageModule\MediaCanvasOpenedBy.cs" />
+    <Compile Include="ReadPageModule\MoviePlayer.cs" />
+    <Compile Include="ReadPageModule\navPoint.cs" />
+    <Compile Include="ReadPageModule\PageDimension.cs" />
+    <Compile Include="ReadPageModule\PageMode.cs" />
+    <Compile Include="ReadPageModule\ReadPagePair.cs" />
+    <Compile Include="ReadPageModule\ReadWindow.cs" />
+    <Compile Include="ReadPageModule\SearchRecord.cs" />
+    <Compile Include="ReadPageModule\ShareButton.cs" />
+    <Compile Include="ReadPageModule\SharedPlatform.cs" />
+    <Compile Include="ReadPageModule\showPenToolPanelEvent.cs" />
+    <Compile Include="ReadPageModule\slideShow.cs" />
+    <Compile Include="ReadPageModule\StrokeChangeEvent.cs" />
+    <Compile Include="ReadPageModule\StrokeCurveEvent.cs" />
+    <Compile Include="ReadPageModule\StrokeDeleteAllEvent.cs" />
+    <Compile Include="ReadPageModule\StrokeDeleteEvent.cs" />
+    <Compile Include="ReadPageModule\StrokeEraseEvent.cs" />
+    <Compile Include="ReadPageModule\StrokeLineEvent.cs" />
+    <Compile Include="ReadPageModule\StrokeRedoEvent.cs" />
+    <Compile Include="ReadPageModule\StrokeToolPanelHorizontal.cs" />
+    <Compile Include="ReadPageModule\StrokeUndoEvent.cs" />
+    <Compile Include="ReadPageModule\ThumbnailImageAndPage.cs" />
+    <Compile Include="ReadPageModule\thumbNailListBoxWidthHeightConverter.cs" />
+    <Compile Include="ReadPageModule\TocButton.cs" />
+    <Compile Include="ReadPageModule\TocButtonController.cs" />
+    <Compile Include="ReadPageModule\UriToCachedImageConverter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="assets\64x64.ico" />
+    <EmbeddedResource Include="assets\btn.png" />
+    <EmbeddedResource Include="assets\btn_orang_bg.png" />
+    <EmbeddedResource Include="assets\hyread.png" />
+    <EmbeddedResource Include="assets\line.png" />
+    <EmbeddedResource Include="assets\mainwindow\01.png" />
+    <EmbeddedResource Include="assets\mainwindow\01_on.png" />
+    <EmbeddedResource Include="assets\mainwindow\02.png" />
+    <EmbeddedResource Include="assets\mainwindow\02_on.png" />
+    <EmbeddedResource Include="assets\mainwindow\03.png" />
+    <EmbeddedResource Include="assets\mainwindow\03_on.png" />
+    <EmbeddedResource Include="assets\mainwindow\04.png" />
+    <EmbeddedResource Include="assets\mainwindow\04_on.png" />
+    <EmbeddedResource Include="assets\mainwindow\05.png" />
+    <EmbeddedResource Include="assets\mainwindow\05_on.png" />
+    <EmbeddedResource Include="assets\mainwindow\06.png" />
+    <EmbeddedResource Include="assets\mainwindow\06_on.png" />
+    <EmbeddedResource Include="assets\mainwindow\arrow_01.png" />
+    <EmbeddedResource Include="assets\mainwindow\arrow_02.png" />
+    <EmbeddedResource Include="assets\mainwindow\arrow_left.png" />
+    <EmbeddedResource Include="assets\mainwindow\arrow_right.png" />
+    <EmbeddedResource Include="assets\mainwindow\btn_01.png" />
+    <EmbeddedResource Include="assets\mainwindow\btn_01_over.png" />
+    <EmbeddedResource Include="assets\mainwindow\btn_02.png" />
+    <EmbeddedResource Include="assets\mainwindow\btn_02_over.png" />
+    <EmbeddedResource Include="assets\mainwindow\btn_03.png" />
+    <EmbeddedResource Include="assets\mainwindow\btn_03_over.png" />
+    <EmbeddedResource Include="assets\mainwindow\btn_04.png" />
+    <EmbeddedResource Include="assets\mainwindow\btn_04_over.png" />
+    <EmbeddedResource Include="assets\mainwindow\btn_05.png" />
+    <EmbeddedResource Include="assets\mainwindow\btn_05_over.png" />
+    <EmbeddedResource Include="assets\mainwindow\btn_06.png" />
+    <EmbeddedResource Include="assets\mainwindow\btn_06_over.png" />
+    <EmbeddedResource Include="assets\mainwindow\btn_back.png" />
+    <EmbeddedResource Include="assets\mainwindow\btn_back_over.png" />
+    <EmbeddedResource Include="assets\mainwindow\btn_forward.png" />
+    <EmbeddedResource Include="assets\mainwindow\btn_forward_over.png" />
+    <EmbeddedResource Include="assets\mainwindow\btn_pause.png" />
+    <EmbeddedResource Include="assets\mainwindow\btn_pause_over.png" />
+    <EmbeddedResource Include="assets\mainwindow\btn_stop.png" />
+    <EmbeddedResource Include="assets\mainwindow\btn_stop_over.png" />
+    <EmbeddedResource Include="assets\mainwindow\gray_bg.png" />
+    <EmbeddedResource Include="assets\mainwindow\gray_bg_over.png" />
+    <EmbeddedResource Include="assets\mainwindow\gray_line.png" />
+    <EmbeddedResource Include="assets\mainwindow\header_bg.png" />
+    <EmbeddedResource Include="assets\mainwindow\header_bg_02.png" />
+    <EmbeddedResource Include="assets\mainwindow\icon-.png" />
+    <EmbeddedResource Include="assets\mainwindow\icon-.png" />
+    <EmbeddedResource Include="assets\mainwindow\icon_01.png" />
+    <EmbeddedResource Include="assets\mainwindow\icon_02.png" />
+    <EmbeddedResource Include="assets\mainwindow\icon_people.png" />
+    <EmbeddedResource Include="assets\mainwindow\icon_people_null.png" />
+    <EmbeddedResource Include="assets\mainwindow\icon_trans.png" />
+    <EmbeddedResource Include="assets\mainwindow\logo.png" />
+    <EmbeddedResource Include="assets\mainwindow\nontransparent.png" />
+    <EmbeddedResource Include="assets\mainwindow\nontransparent_on.png" />
+    <EmbeddedResource Include="assets\mainwindow\orang.png" />
+    <EmbeddedResource Include="assets\mainwindow\scroll_bar.png" />
+    <EmbeddedResource Include="assets\mainwindow\scroll_bar01.png" />
+    <EmbeddedResource Include="assets\mainwindow\scroll_bar02.png" />
+    <EmbeddedResource Include="assets\mainwindow\scroll_bottom.png" />
+    <EmbeddedResource Include="assets\mainwindow\scroll_top.png" />
+    <EmbeddedResource Include="assets\mainwindow\size_bar.png" />
+    <EmbeddedResource Include="assets\mainwindow\sound.png" />
+    <EmbeddedResource Include="assets\mainwindow\sound_bar.png" />
+    <EmbeddedResource Include="assets\mainwindow\transparent.png" />
+    <EmbeddedResource Include="assets\mainwindow\transparent_on.png" />
+    <EmbeddedResource Include="assets\mainwindow\video_bar.png" />
+    <EmbeddedResource Include="assets\nocover.jpg" />
+    <EmbeddedResource Include="assets\readwindow\-.png" />
+    <EmbeddedResource Include="assets\readwindow\-.png" />
+    <EmbeddedResource Include="assets\readwindow\arrow_01.png" />
+    <EmbeddedResource Include="assets\readwindow\arrow_02.png" />
+    <EmbeddedResource Include="assets\readwindow\arrow_left_b.png" />
+    <EmbeddedResource Include="assets\readwindow\arrow_left_epub.png" />
+    <EmbeddedResource Include="assets\readwindow\arrow_right_b.png" />
+    <EmbeddedResource Include="assets\readwindow\arrow_right_epub.png" />
+    <EmbeddedResource Include="assets\readwindow\bar.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_-e5-85-a8.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_-e5-85-a8_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_-e6-9b-b8.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_-e6-9b-b8_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_-e6-b3-a8.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_-e6-b3-a8_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_-e8-97-8f.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_-e8-97-8f_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_01.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_013.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_013_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_01_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_02.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_02_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_03.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_03_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_04.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_04_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_05.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_05_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_06.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_06_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_07.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_07_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_08.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_08_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_09.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_09_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_10.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_10_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_11.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_11_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_12.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_12_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_13.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_13_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_14.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_14_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_15.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_15_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_16.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_16_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_17.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_17_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_18.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_18_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_back.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_backtobookshelf.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_back_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_bookmark.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_bookmark_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_close.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_close_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_forward.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_forward_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_full.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_full_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_hide.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_hide_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_note.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_note_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_pause.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_pause_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_play.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_play_over.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_stop.png" />
+    <EmbeddedResource Include="assets\readwindow\btn_stop_over.png" />
+    <EmbeddedResource Include="assets\readwindow\gray_bg.png" />
+    <EmbeddedResource Include="assets\readwindow\gray_bg_over.png" />
+    <EmbeddedResource Include="assets\readwindow\gray_line.png" />
+    <EmbeddedResource Include="assets\readwindow\header_bg_bar.png" />
+    <EmbeddedResource Include="assets\readwindow\icon_f.png" />
+    <EmbeddedResource Include="assets\readwindow\icon_g.png" />
+    <EmbeddedResource Include="assets\readwindow\icon_m.png" />
+    <EmbeddedResource Include="assets\readwindow\icon_p.png" />
+    <EmbeddedResource Include="assets\readwindow\icon_t.png" />
+    <EmbeddedResource Include="assets\readwindow\i_book.png" />
+    <EmbeddedResource Include="assets\readwindow\notyet.jpg" />
+    <EmbeddedResource Include="assets\readwindow\point.png" />
+    <EmbeddedResource Include="assets\readwindow\slide_play.png" />
+    <EmbeddedResource Include="assets\readwindow\slide_quick.png" />
+    <EmbeddedResource Include="assets\readwindow\slide_stop.png" />
+    <EmbeddedResource Include="assets\readwindow\sound.png" />
+    <EmbeddedResource Include="assets\readwindow\sound_bar.png" />
+    <EmbeddedResource Include="assets\readwindow\video_bar.png" />
+    <EmbeddedResource Include="assets\start.jpg" />
+    <EmbeddedResource Include="assets\start.png" />
+    <EmbeddedResource Include="assets\trypageend.jpg" />
+    <EmbeddedResource Include="assets\trypageendlarge.jpg" />
+    <EmbeddedResource Include="ReadPageModule\fullTextView.resx" />
+    <EmbeddedResource Include="ReadPageModule\HlsPlayer.resx" />
+    <EmbeddedResource Include="ReadPageModule\slideShow.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="app.xaml" />
+    <Page Include="audioplayer.xaml" />
+    <Page Include="movieplayer.xaml" />
+    <Page Include="readwindow.xaml" />
+    <Page Include="stroketoolpanelhorizontal.xaml" />
+    <Page Include="tocbutton.xaml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

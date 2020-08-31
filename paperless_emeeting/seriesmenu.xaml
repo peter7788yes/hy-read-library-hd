@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="PaperLess_Emeeting.SeriesMenu" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" Width="300" xmlns:paperless_emeeting="clr-namespace:PaperLess_Emeeting;assembly=PaperLess_Emeeting_NTPC">
+  <Grid Background="#00FFFFFF">
+    <Label Panel.ZIndex="-1" BorderBrush="#5F879B" BorderThickness="0,0,0,1.5" />
+    <DockPanel LastChildFill="True" Margin="0,0,0,1">
+      <TextBlock Name="txtSeriesName" Margin="20,0,0,0" DockPanel.Dock="Left" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left" />
+      <Image Name="btnImg" Width="26" Height="26" DockPanel.Dock="Right" HorizontalAlignment="Right" Source="images/icon_arrow@2x.png" Stretch="Fill" Margin="10,9,20,9" />
+    </DockPanel>
+  </Grid>
+</UserControl>
